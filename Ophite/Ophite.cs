@@ -15,7 +15,7 @@ namespace Ophite
         /// <summary>
         /// Autoři frameworku.
         /// </summary>
-        public static readonly string[] AUTHORS = { "mimic" };
+        public static readonly string[] AUTHORS = { "mimic" }; //test
 
         public const float PI = 3.14f;
     }
