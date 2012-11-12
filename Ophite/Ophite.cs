@@ -15,6 +15,6 @@ namespace Ophite
         /// <summary>
         /// Autoři frameworku.
         /// </summary>
-        public static readonly string[] AUTHORS = { "mimic" };
+        public static readonly string[] AUTHORS = { "mimic" }; //testovaci komentar
     }
 }
