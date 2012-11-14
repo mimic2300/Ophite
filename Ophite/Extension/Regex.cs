@@ -1,11 +1,11 @@
 ﻿using System.Text.RegularExpressions;
 
-namespace Ophite.Security
+namespace Ophite.Extension
 {
     /// <summary>
     /// Rozšiřuje typy o bezpečtnostní prvky.
     /// </summary>
-    public static class SecurityEx
+    public static class Regex
     {
         /// <summary>
         /// Kontroluje text přes regex výraz.
@@ -105,7 +105,7 @@ namespace Ophite.Security
                     pattern = @"^m*(d?c{0,3}|c[dm])" + "(l?x{0,3}|x[lc])(v?i{0,3}|i[vx])$";
                     break;
             }
-            return Regex.IsMatch(text, pattern, options);
+            return System.Text.RegularExpressions.Regex.IsMatch(text, pattern, options);
         }
     }
 }

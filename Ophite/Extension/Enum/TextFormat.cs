@@ -1,4 +1,4 @@
-﻿namespace Ophite.Base
+﻿namespace Ophite.Extension
 {
     /// <summary>
     /// Kódování textu.

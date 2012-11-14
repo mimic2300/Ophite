@@ -1,9 +1,9 @@
-﻿namespace Ophite.Security
+﻿namespace Ophite.Extension
 {
     /// <summary>
     /// Typy regex výrazů pro kontrolou vstupu.
     /// </summary>
-    public enum RegexMatch
+    public enum RegexMatch : int
     {
         /// <summary>
         /// IP adresa.

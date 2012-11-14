@@ -44,15 +44,17 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Base\Cmd.cs" />
-    <Compile Include="Base\Converter.cs" />
-    <Compile Include="Base\Enum\TextFormat.cs" />
+    <Compile Include="Extension\Converter.cs" />
+    <Compile Include="Extension\Enum\TextFormat.cs" />
+    <Compile Include="Base\Logic.cs" />
     <Compile Include="Global.cs" />
     <Compile Include="Const.cs" />
     <Compile Include="Ophite.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Security\Enum\RegexMatch.cs" />
-    <Compile Include="Security\SecurityEx.cs" />
+    <Compile Include="Extension\Enum\RegexMatch.cs" />
+    <Compile Include="Extension\Regex.cs" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

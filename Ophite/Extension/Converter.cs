@@ -1,5 +1,4 @@
-﻿using Ophite.Security;
-using System;
+﻿using System;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.Drawing.Text;
@@ -10,12 +9,12 @@ using System.Runtime.Serialization.Formatters.Binary;
 using System.Runtime.Serialization.Formatters.Soap;
 using System.Text;
 
-namespace Ophite.Base
+namespace Ophite.Extension
 {
     /// <summary>
     /// Slouží pro převody z jednoho datového typů do jiného.
     /// </summary>
-    public static partial class Converter
+    public static class Converter
     {
         #region short
 

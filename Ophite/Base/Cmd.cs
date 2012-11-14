@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Ophite.Extension;
+using System;
 
 namespace Ophite.Base
 {
