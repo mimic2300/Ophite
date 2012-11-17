@@ -10,6 +10,6 @@ namespace Ophite
         /// <summary>
         /// Generátor náhodných čísel.
         /// </summary>
-        public static readonly Random RAND = new Random((int)DateTime.Now.Ticks);
+        public static readonly Random RAND = new Random(Environment.TickCount);
     }
 }

@@ -537,6 +537,20 @@ namespace Ophite.Extension
             return text;
         }
 
+        /// <summary>
+        /// Převádí text z base64 zpět na pole byte.
+        /// </summary>
+        /// <param name="data">Vstupní text v base64.</param>
+        /// <returns>Vrací pole byte.</returns>
+        /// <remarks>Pokud vstupní text bude NULL, tak vrací prázdní pole byte.</remarks>
+        public static byte[] FromBase64(this string data)
+        {
+            if (data.IsEmpty())
+                return new byte[] { };
+
+            return Convert.FromBase64String(data);
+        }
+
         #endregion string
 
         #region string[]
@@ -1017,6 +1031,20 @@ namespace Ophite.Extension
                 offset += b.Length;
             }
             return output;
+        }
+
+        /// <summary>
+        /// Převádí byte pole do base64.
+        /// </summary>
+        /// <param name="data">Vstupní byte pole.</param>
+        /// <returns>Vrací text v base64.</returns>
+        /// <remarks>Pokud vstup bude NULL, tak vrací NULL.</remarks>
+        public static string ToBase64(this byte[] data)
+        {
+            if (data.IsEmpty())
+                return null;
+
+            return Convert.ToBase64String(data);
         }
 
         #endregion byte[]

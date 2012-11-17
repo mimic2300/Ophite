@@ -1,6 +1,6 @@
-﻿using System;
+﻿using Ophite.Extension;
+using System;
 using System.Runtime.InteropServices;
-using Ophite.Extension;
 
 namespace Ophite.Base
 {

@@ -1,4 +1,6 @@
-﻿using System.Text.RegularExpressions;
+﻿using System;
+using System.Collections.Generic;
+using System.Text.RegularExpressions;
 
 namespace Ophite.Extension
 {
@@ -106,6 +108,171 @@ namespace Ophite.Extension
                     break;
             }
             return System.Text.RegularExpressions.Regex.IsMatch(text, pattern, options);
+        }
+
+        /// <summary>
+        /// Odstraňuje z textu určité prvky.
+        /// </summary>
+        /// <param name="input">Vstupní text.</param>
+        /// <param name="template">Typ modifikace.</param>
+        /// <returns>Vrací upravený text.</returns>
+        /// <remarks>Pokud vstupní text bude prázdný, tak vrácí NULL.</remarks>
+        public static string Modify(this string input, RegexModify template)
+        {
+            if (input.IsEmpty())
+                return null;
+
+            // \000 null
+            // \010 backspace
+            // \011 horizontal tab
+            // \012 new line
+            // \015 carriage return
+            // \032 substitute
+            // \042 double quote
+            // \047 single quote
+            // \134 backslash
+            // \140 grave accent
+
+            switch (template)
+            {
+                // přidá do vstupního textu před všechny potencionálně nebezpečné znaky zpětné lomítko
+                case RegexModify.AddSlashes:
+                    return System.Text.RegularExpressions.Regex.Replace(
+                        input, @"[\000\010\011\012\015\032\042\047\134\140]", "\\$0");
+
+                // odebere ze vstupního textu zpětná lomítka před potencionálně nebezpečnými znaky
+                case RegexModify.RemoveSlashes:
+                    return System.Text.RegularExpressions.Regex.Replace(
+                        input, @"(\\)([\000\010\011\012\015\032\042\047\134\140])", "$2");
+
+                // odebere všechny tabulátory
+                case RegexModify.RemoveTabs:
+                    return System.Text.RegularExpressions.Regex.Replace(
+                        input, @"[\t]", "");
+
+                // odebere všechny CR (carriage return)
+                case RegexModify.RemoveCarriageReturn:
+                    return System.Text.RegularExpressions.Regex.Replace(
+                        input, @"[\n]", "");
+
+                // odebere všechny LF (line feed)
+                case RegexModify.RemoveLineFeed:
+                    return System.Text.RegularExpressions.Regex.Replace(
+                        input, @"[\r]", "");
+
+                // odebere všechny nové řádky (ve windows)
+                case RegexModify.RemoveWindowsNewLine:
+                    return System.Text.RegularExpressions.Regex.Replace(
+                        input, @"[\n\r]", "");
+
+                // odebere všechny HTML tagy (vše mezi <...>)
+                case RegexModify.RemoveHTMLTags:
+                    return System.Text.RegularExpressions.Regex.Replace(
+                        input, "<.*?>", "");
+
+                // spojí víceřádkové stringy do jednoho
+                case RegexModify.JoinMultilineStrings:
+                    return System.Text.RegularExpressions.Regex.Replace(
+                        input, @"\s*\r?\n\s*", " ");
+
+                default: return input;
+            }
+        }
+
+        /// <summary>
+        /// Parsuje text podle přednastaveného paternu.
+        /// </summary>
+        /// <param name="input">Vstupní text.</param>
+        /// <param name="template">Jak se má parsovat.</param>
+        /// <returns>Vrací pole stringů s výsledky.</returns>
+        /// <remarks>Pokud vstupní text bude prázdný nebo nebude co parsovat, tak vrácí NULL.</remarks>
+        public static string[] Parse(this string input, RegexParse template)
+        {
+            if (input.IsEmpty())
+                return null;
+
+            List<string> data = new List<string>();
+            MatchCollection parsed = null;
+
+            switch (template)
+            {
+                // vybere z textu všechny binarní hodnoty o délce 8 bitů
+                case RegexParse.ByteInBinary:
+                    parsed = System.Text.RegularExpressions.Regex.Matches(
+                        input, "[01]{8}", RegexOptions.Multiline);
+                    break;
+
+                // vybere z textu všechny youtube ID videa
+                case RegexParse.YouTubeVideoID:
+                    parsed = System.Text.RegularExpressions.Regex.Matches(
+                        input, @"(?<=v(\=|\/))([-a-zA-Z0-9_]+)|(?<=youtu\.be\/)([-a-zA-Z0-9_]+)", RegexOptions.Multiline);
+                    break;
+
+                // vybere všechna velká slova
+                case RegexParse.FindAllCapsWords:
+                    parsed = System.Text.RegularExpressions.Regex.Matches(
+                        input, @"(\b[^\Wa-z0-9_]+\b)", RegexOptions.Multiline);
+                    break;
+
+                // vybere všechna malá slova
+                case RegexParse.FindAllLowercaseWords:
+                    parsed = System.Text.RegularExpressions.Regex.Matches(
+                        input, @"(\b[^\WA-Z0-9_]+\b)", RegexOptions.Multiline);
+                    break;
+
+                // vybere všechna slova, která začínají velkým písmenem
+                case RegexParse.FindAllInitialCaps:
+                    parsed = System.Text.RegularExpressions.Regex.Matches(
+                        input, @"(\b[^\Wa-z0-9_][^\WA-Z0-9_]*\b)", RegexOptions.Multiline);
+                    break;
+
+                // vybere všechna čísla
+                case RegexParse.FindAllNumbers:
+                    parsed = System.Text.RegularExpressions.Regex.Matches(
+                        input, @"(\d+\.?\d*|\.\d+)", RegexOptions.Multiline);
+                    break;
+            }
+
+            if (parsed == null || parsed.Count == 0)
+                return null;
+
+            foreach (Match s in parsed)
+            {
+                data.Add(s.ToString());
+            }
+            return data.ToArray();
+        }
+
+        /// <summary>
+        /// Parsuje text podle vlastního paternu.
+        /// </summary>
+        /// <param name="input">Vstupní text.</param>
+        /// <param name="patern">Patern, podle kterého se má parsovat.</param>
+        /// <param name="option">Nastavení parseru.</param>
+        /// <returns>Vrací pole stringů s výsledky.</returns>
+        /// <remarks>Pokud vstupní text bude prázdný nebo nebude co parsovat, tak vrácí NULL.</remarks>
+        public static string[] Parse(this string input, string patern, RegexOptions option = RegexOptions.Multiline)
+        {
+            if (input.IsEmpty())
+                return null;
+
+            List<string> data = new List<string>();
+            MatchCollection parsed = null;
+
+            try
+            {
+                parsed = System.Text.RegularExpressions.Regex.Matches(input, patern, option);
+            }
+            catch (Exception) { }
+
+            if (parsed == null || parsed.Count == 0)
+                return null;
+
+            foreach (Match s in parsed)
+            {
+                data.Add(s.ToString());
+            }
+            return data.ToArray();
         }
     }
 }
