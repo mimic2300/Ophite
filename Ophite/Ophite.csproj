@@ -44,6 +44,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Base\Cmd.cs" />
+    <Compile Include="Base\Generic.cs" />
     <Compile Include="Extension\Converter.cs" />
     <Compile Include="Extension\Enum\TextFormat.cs" />
     <Compile Include="Base\Logic.cs" />
