@@ -23,6 +23,7 @@ namespace Ophite.Extension
         /// </summary>
         /// <param name="number">Vstupní číslo.</param>
         /// <returns>Vrací short číslo jako pole byte.</returns>
+        /// <remarks>Převede LittleEndian na BigEndian.</remarks>
         public static byte[] AsBytes(this short number)
         {
             byte[] data = BitConverter.GetBytes(number);
@@ -42,6 +43,7 @@ namespace Ophite.Extension
         /// </summary>
         /// <param name="number">Vstupní číslo.</param>
         /// <returns>Vrací ushort číslo jako pole byte.</returns>
+        /// <remarks>Převede LittleEndian na BigEndian.</remarks>
         public static byte[] AsBytes(this ushort number)
         {
             byte[] data = BitConverter.GetBytes(number);
@@ -61,6 +63,7 @@ namespace Ophite.Extension
         /// </summary>
         /// <param name="number">Vstupní číslo.</param>
         /// <returns>Vrací int číslo jako pole byte.</returns>
+        /// <remarks>Převede LittleEndian na BigEndian.</remarks>
         public static byte[] AsBytes(this int number)
         {
             byte[] data = BitConverter.GetBytes(number);
@@ -80,6 +83,7 @@ namespace Ophite.Extension
         /// </summary>
         /// <param name="number">Vstupní číslo.</param>
         /// <returns>Vrací uint číslo jako pole byte.</returns>
+        /// <remarks>Převede LittleEndian na BigEndian.</remarks>
         public static byte[] AsBytes(this uint number)
         {
             byte[] data = BitConverter.GetBytes(number);
@@ -99,6 +103,7 @@ namespace Ophite.Extension
         /// </summary>
         /// <param name="number">Vstupní číslo.</param>
         /// <returns>Vrací long číslo jako pole byte.</returns>
+        /// <remarks>Převede LittleEndian na BigEndian.</remarks>
         public static byte[] AsBytes(this long number)
         {
             byte[] data = BitConverter.GetBytes(number);
@@ -139,6 +144,7 @@ namespace Ophite.Extension
         /// </summary>
         /// <param name="number">Vstupní číslo.</param>
         /// <returns>Vrací ulong číslo jako pole byte.</returns>
+        /// <remarks>Převede LittleEndian na BigEndian.</remarks>
         public static byte[] AsBytes(this ulong number)
         {
             byte[] data = BitConverter.GetBytes(number);
@@ -158,6 +164,7 @@ namespace Ophite.Extension
         /// </summary>
         /// <param name="number">Vstupní číslo.</param>
         /// <returns>Vrací float číslo jako pole byte.</returns>
+        /// <remarks>Převede LittleEndian na BigEndian.</remarks>
         public static byte[] AsBytes(this float number)
         {
             byte[] data = BitConverter.GetBytes(number);
@@ -166,26 +173,6 @@ namespace Ophite.Extension
                 Array.Reverse(data);
 
             return data;
-        }
-
-        /// <summary>
-        /// Převádí desetinné stupně na radiány.
-        /// </summary>
-        /// <param name="degree">Desetinné stupně.</param>
-        /// <returns>Vrací radiány z float čísla.</returns>
-        public static float AsRadian(this float degree)
-        {
-            return (float)(degree * Math.PI / 180.0);
-        }
-
-        /// <summary>
-        /// Převádí radiány na desetinné stupně.
-        /// </summary>
-        /// <param name="radian">Radiány.</param>
-        /// <returns>Vrací desetinné stupně z float čísla.</returns>
-        public static float AsDegree(this float radian)
-        {
-            return (float)(radian / Math.PI * 180.0);
         }
 
         #endregion float
@@ -197,6 +184,7 @@ namespace Ophite.Extension
         /// </summary>
         /// <param name="number">Vstupní číslo.</param>
         /// <returns>Vrací double číslo jako pole byte.</returns>
+        /// <remarks>Převede LittleEndian na BigEndian.</remarks>
         public static byte[] AsBytes(this double number)
         {
             byte[] data = BitConverter.GetBytes(number);
@@ -205,26 +193,6 @@ namespace Ophite.Extension
                 Array.Reverse(data);
 
             return data;
-        }
-
-        /// <summary>
-        /// Převádí desetinné stupně na radiány.
-        /// </summary>
-        /// <param name="degree">Desetinné stupně.</param>
-        /// <returns>Vrací radiány z double čísla..</returns>
-        public static double AsRadian(this double degree)
-        {
-            return (degree * Math.PI / 180.0);
-        }
-
-        /// <summary>
-        /// Převádí radiány na desetinné stupně.
-        /// </summary>
-        /// <param name="radian">Radiány.</param>
-        /// <returns>Vrací desetinné stupně z double čísla.</returns>
-        public static double AsDegree(this double radian)
-        {
-            return (radian / Math.PI * 180.0);
         }
 
         #endregion double

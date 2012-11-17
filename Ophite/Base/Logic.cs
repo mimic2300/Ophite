@@ -86,12 +86,12 @@ namespace Ophite.Base
         public static double GpsDistance(double latit1, double longit1, double latit2, double longit2, char unit = 'K')
         {
             double theta = longit1 - longit2;
-            double dist = Math.Sin(latit1.AsRadian()) * Math.Sin(latit2.AsRadian()) +
-                          Math.Cos(latit1.AsRadian()) * Math.Cos(latit2.AsRadian()) *
-                          Math.Cos(theta.AsRadian());
+            double dist = Math.Sin(ToRadian(latit1)) * Math.Sin(ToRadian(latit2)) +
+                          Math.Cos(ToRadian(latit1)) * Math.Cos(ToRadian(latit2)) *
+                          Math.Cos(ToRadian(theta));
 
             dist = Math.Acos(dist);
-            dist = dist.AsDegree();
+            dist = ToDegree(dist);
             dist = dist * 60 * 1.1515;
 
             switch (unit)
@@ -124,17 +124,17 @@ namespace Ophite.Base
         /// <param name="origin">Originání bod.</param>
         /// <returns>Vrací nový bod, který je pod určitým úhlem.</returns>
         /// <remarks>Pokud originální bod bude NULL, tak vrácí instanci nového bodu [0,0].</remarks>
-        public static PointF DegreesToPoint(float degrees, float radius, Point origin)
+        public static PointF DegreesToPoint(double degrees, double radius, Point origin)
         {
             PointF newPoint = new PointF();
 
             if (origin == null)
                 return newPoint;
 
-            double radians = degrees.AsRadian();
+            double radians = ToRadian(degrees);
 
-            newPoint.X = (float)Math.Cos(radians) * radius + origin.X;
-            newPoint.Y = (float)Math.Sin(-radians) * radius + origin.Y;
+            newPoint.X = (float)(Math.Cos(radians) * radius + origin.X);
+            newPoint.Y = (float)(Math.Sin(-radians) * radius + origin.Y);
 
             return newPoint;
         }
@@ -146,7 +146,7 @@ namespace Ophite.Base
         /// <param name="origin">Originální bod.</param>
         /// <returns>Vrací úhel.</returns>
         /// <remarks>Pokud nějaký vstupní bod bude NULL, tak vrácí 0.</remarks>
-        public static float AngleToDegrees(Point angle, Point origin)
+        public static double AngleToDegrees(Point angle, Point origin)
         {
             if (angle == null || origin == null)
                 return 0;
@@ -157,7 +157,7 @@ namespace Ophite.Base
             double radAngle = Math.Atan2(deltaY, deltaX);
             double degreeAngle = radAngle * 180.0 / Math.PI;
 
-            return (float)(180.0 - degreeAngle);
+            return 180.0 - degreeAngle;
         }
 
         /// <summary>
@@ -200,6 +200,26 @@ namespace Ophite.Base
             }
 
             return first;
+        }
+
+        /// <summary>
+        /// Převádí desetinné stupně na radiány.
+        /// </summary>
+        /// <param name="degree">Desetinné stupně.</param>
+        /// <returns>Vrací radiány.</returns>
+        public static double ToRadian(double degree)
+        {
+            return (degree * Math.PI / 180.0);
+        }
+
+        /// <summary>
+        /// Převádí radiány na desetinné stupně.
+        /// </summary>
+        /// <param name="radian">Radiány.</param>
+        /// <returns>Vrací desetinné stupně.</returns>
+        public static double ToDegree(double radian)
+        {
+            return (radian / Math.PI * 180.0);
         }
     }
 }
