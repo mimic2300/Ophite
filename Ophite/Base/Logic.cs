@@ -183,10 +183,17 @@ namespace Ophite.Base
         /// Při vstupním čísle 40 a víc to může trvat poměrně dlouho.</remarks>
         public static ulong Fibonacci(uint number)
         {
-            if (number == 0 || number == 1)
-                return number;
+            ulong first = 0;
+            ulong second = 1;
 
-            return Fibonacci(number - 1) + Fibonacci(number - 2);
+            for (int i = 0; i < number; i++)
+            {
+                ulong temp = first;
+                first = second;
+                second = temp + second;
+            }
+
+            return first;
         }
     }
 }
