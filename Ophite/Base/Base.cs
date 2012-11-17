@@ -1,4 +1,5 @@
 ﻿using System;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
 using System.Reflection;
@@ -14,26 +15,27 @@ namespace Ophite.Base
         /// <summary>
         /// Vynuceně ukončí tento process.
         /// </summary>
-        public static void ForceTerminate()
+        /// <exception cref="InvalidOperationException"></exception>
+        /// <exception cref="PlatformNotSupportedException"></exception>
+        public static bool ForceTerminate()
         {
-            Process.GetCurrentProcess().Kill();
+            return ProcessKill(Process.GetCurrentProcess().Id);
         }
 
         /// <summary>
         /// Ukončuje všechny procesy, který mají stejný název.
         /// </summary>
         /// <param name="processName">Název procesu.</param>
+        /// <exception cref="Win32Exception"></exception>
+        /// <exception cref="NotSupportedException"></exception>
+        /// <exception cref="InvalidOperationException"></exception>
         public static void ProcessKill(string processName)
         {
             Process[] proc = Process.GetProcessesByName(processName);
 
             foreach (Process p in proc)
             {
-                try
-                {
-                    p.Kill();
-                }
-                catch (Exception) { }
+                p.Kill();
             }
         }
 
@@ -49,23 +51,35 @@ namespace Ophite.Base
                 Process.GetProcessById(processID).Kill();
                 return true;
             }
-            catch (Exception) { return false; }
+            catch (Win32Exception) { }
+            catch (NotSupportedException) { }
+            catch (ArgumentException) { }
+            catch (InvalidOperationException) { }
+
+            return false;
         }
 
         /// <summary>
         /// Vrací pole byte ze zdroje (Resources).
         /// </summary>
-        /// <param name="namespaceDir">Název jmenného prostoru až do adresáře se zdrojem.</param>
-        /// <param name="file">Název souboru z adresáře zdroje.</param>
+        /// <param name="namespaceDir">Název jmenného prostoru (až do adresáře se zdrojem).</param>
+        /// <param name="file">Název souboru (z adresáře zdroje).</param>
         /// <returns>Vrací pole byte souboru zdroje.</returns>
-        /// <remarks>Pokud se zadá špatná cesta k souboru do zdroje, tak vrací NULL.</remarks>
+        /// <exception cref="ArgumentNullException"></exception>
+        /// <exception cref="ArgumentException"></exception>
+        /// <exception cref="ArgumentOutOfRangeException"></exception>
+        /// <exception cref="NotImplementedException"></exception>
+        /// <exception cref="NotSupportedException"></exception>
+        /// <exception cref="FileLoadException"></exception>
+        /// <exception cref="FileNotFoundException"></exception>
+        /// <exception cref="BadImageFormatException"></exception>
+        /// <exception cref="OutOfMemoryException"></exception>
+        /// <exception cref="ObjectDisposedException"></exception>
+        /// <exception cref="IOException"></exception>
         public static byte[] BytesFromResources(string namespaceDir, string file)
         {
             using (Stream stream = Assembly.GetExecutingAssembly().GetManifestResourceStream(namespaceDir + "." + file))
             {
-                if (stream == null)
-                    return null;
-
                 IntPtr data = Marshal.AllocCoTaskMem((int)stream.Length);
                 byte[] byteData = new byte[stream.Length];
 
@@ -80,18 +94,23 @@ namespace Ophite.Base
         /// <summary>
         /// Vrací ukazatel na soubor ze zdroje (Resource).
         /// </summary>
-        /// <param name="namespaceDir">Název jmenného prostoru až do adresáře se zdrojem.</param>
-        /// <param name="file">Název souboru z adresáře zdroje.</param>
+        /// <param name="namespaceDir">Název jmenného prostoru (až do adresáře se zdrojem).</param>
+        /// <param name="file">Název souboru (z adresáře zdroje).</param>
         /// <returns>Vrací ukazatel na soubor.</returns>
-        /// <remarks>Pokud se zadá špatná cesta k souboru do zdroje, tak vrací 0.
-        /// Nutno poté uvolnit pointer, aby nevznikl memory leak!</remarks>
+        /// <remarks>Nutno poté uvolnit ukazatel, aby nevznikl memory leak!</remarks>
+        /// <exception cref="ArgumentNullException"></exception>
+        /// <exception cref="ArgumentException"></exception>
+        /// <exception cref="FileLoadException"></exception>
+        /// <exception cref="FileNotFoundException"></exception>
+        /// <exception cref="BadImageFormatException"></exception>
+        /// <exception cref="NotImplementedException"></exception>
+        /// <exception cref="OutOfMemoryException"></exception>
+        /// <exception cref="ObjectDisposedException"></exception>
+        /// <exception cref="NotSupportedException"></exception>
         public static IntPtr HandleFromResources(string namespaceDir, string file)
         {
             using (Stream stream = Assembly.GetExecutingAssembly().GetManifestResourceStream(namespaceDir + "." + file))
             {
-                if (stream == null)
-                    return IntPtr.Zero;
-
                 return Marshal.AllocCoTaskMem((int)stream.Length);
             }
         }
@@ -100,9 +119,9 @@ namespace Ophite.Base
         /// Získá aktuální čas v sekundách.
         /// </summary>
         /// <returns>Vrací sekundy.</returns>
-        public static double ActualTime()
+        public static long ActualTime()
         {
-            return new TimeSpan(DateTime.Now.Ticks).TotalSeconds;
+            return (long)new TimeSpan(DateTime.Now.Ticks).TotalSeconds;
         }
 
         /// <summary>
@@ -111,6 +130,7 @@ namespace Ophite.Base
         /// <returns>Vrací unixtime.</returns>
         public static long UnixTime()
         {
+            // zde vyjímka "ArgumentOutOfRangeException" nenastane
             return (long)(DateTime.UtcNow - new DateTime(1970, 1, 1)).TotalSeconds;
         }
     }

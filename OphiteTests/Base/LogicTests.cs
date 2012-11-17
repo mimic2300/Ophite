@@ -8,19 +8,12 @@ namespace OphiteTests.Base
     public class LogicTests
     {
         [TestMethod]
-        public void QuadraticRoot_First()
+        public void QuadraticRoot()
         {
-            double first = Logic.QuadraticRoot(5, 8, -2, true);
+            double[] result = Logic.QuadraticRoot(5, 8, -2);
 
-            Assert.AreEqual(0.219803902, first, 9);
-        }
-
-        [TestMethod]
-        public void QuadraticRoot_Second()
-        {
-            double second = Logic.QuadraticRoot(5, 8, -2, false);
-
-            Assert.AreEqual(-1.819803902, second, 9);
+            Assert.AreEqual(0.219803902, result[0], 1e-9);
+            Assert.AreEqual(-1.819803902, result[1], 1e-9);
         }
 
         [TestMethod]
@@ -28,7 +21,7 @@ namespace OphiteTests.Base
         {
             double distance = Logic.GpsDistance(10, 50, -10, -50);
 
-            Assert.AreEqual(11280.527224170, distance, 9);
+            Assert.AreEqual(11280.527224170, distance, 1e-9);
         }
 
         [TestMethod]
@@ -36,7 +29,7 @@ namespace OphiteTests.Base
         {
             double distance = Logic.GpsDistance(10, 50, -10, -50, 'M');
 
-            Assert.AreEqual(6086.958314362, distance, 9);
+            Assert.AreEqual(6086.958314362, distance, 1e-9);
         }
 
         [TestMethod]
@@ -44,7 +37,7 @@ namespace OphiteTests.Base
         {
             double distance = Logic.PointDistance(new Point(10, 10), new Point(50, 50));
 
-            Assert.AreEqual(56.568542494, distance, 9);
+            Assert.AreEqual(56.568542494, distance, 1e-9);
         }
 
         [TestMethod]
@@ -108,7 +101,7 @@ namespace OphiteTests.Base
         {
             double result = Logic.ToRadian(12.25);
 
-            Assert.AreEqual(0.213802833, result, 9);
+            Assert.AreEqual(0.213802833, result, 1e-9);
         }
 
         [TestMethod]
@@ -116,7 +109,31 @@ namespace OphiteTests.Base
         {
             double result = Logic.ToDegree(12.25);
 
-            Assert.AreEqual(701.873299, result, 6);
+            Assert.AreEqual(701.873299, result, 1e-6);
+        }
+
+        [TestMethod]
+        public void IsPerfectNumber()
+        {
+            bool value = Logic.IsPerfectNumber(8128);
+
+            Assert.AreEqual(true, value);
+        }
+
+        [TestMethod]
+        public void Gcd()
+        {
+            int result = Logic.Gcd(9, 15);
+
+            Assert.AreEqual(3, result);
+        }
+
+        [TestMethod]
+        public void Lcm()
+        {
+            int result = Logic.Lcm(9, 15);
+
+            Assert.AreEqual(45, result);
         }
     }
 }

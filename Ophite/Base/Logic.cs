@@ -1,11 +1,10 @@
-﻿using Ophite.Extension;
-using System;
+﻿using System;
 using System.Drawing;
 
 namespace Ophite.Base
 {
     /// <summary>
-    /// Pracuje s matematikou.
+    /// Pracuje s matematikou a logikou.
     /// </summary>
     public static class Logic
     {
@@ -54,24 +53,29 @@ namespace Ophite.Base
         #endregion Konstanty
 
         /// <summary>
-        /// Vypočte kořen kvadratické rovnice.
+        /// Vypočte kořen kvadratické rovnice o jedné neznámé.
         /// </summary>
         /// <param name="a">Koeficient A.</param>
         /// <param name="b">Koeficient B.</param>
         /// <param name="c">Koeficient C.</param>
-        /// <param name="isFirst">Pokud bude TRUE, tak se vypočte první kořen a pokud bude FALSE, tak druhý.</param>
-        /// <returns>Vrací hodnotu kořene.</returns>
-        public static double QuadraticRoot(double a, double b, double c, bool isFirst)
+        /// <returns>Vrací kořeny kvadratické rovnice.</returns>
+        /// <remarks>Pokud orvnice nemá řešení, tak vrací prázdné pole.</remarks>
+        public static double[] QuadraticRoot(double a, double b, double c)
         {
-            if (a == 0)
-                return -c / b;
-
             double dis = b * b - 4 * a * c;
 
-            if (isFirst)
-                return (-b + Math.Sqrt(dis)) / (2 * a);
+            // rovnice nemá řešení
+            if (dis < 0)
+                return new double[] { };
 
-            return (-b - Math.Sqrt(dis)) / (2 * a);
+            if (dis == 0)
+                return new double[] { -b / 2 * a };
+
+            return new double[]
+            {
+                (-b + Math.Sqrt(dis)) / (2 * a),
+                (-b - Math.Sqrt(dis)) / (2 * a)
+            };
         }
 
         /// <summary>
@@ -82,7 +86,7 @@ namespace Ophite.Base
         /// <param name="latit2">GPS 2: latit.</param>
         /// <param name="longit2">GPS 2: longit.</param>
         /// <param name="unit">Do jakých jednotek se má vzdálenost převést (K - km, M - míle).</param>
-        /// <returns>Vrací vzdálenost, mezi dvěma GPS.</returns>
+        /// <returns>Vrací vzdálenost mezi dvěma GPS.</returns>
         public static double GpsDistance(double latit1, double longit1, double latit2, double longit2, char unit = 'K')
         {
             double theta = longit1 - longit2;
@@ -123,14 +127,9 @@ namespace Ophite.Base
         /// <param name="radius">Poloměr.</param>
         /// <param name="origin">Originání bod.</param>
         /// <returns>Vrací nový bod, který je pod určitým úhlem.</returns>
-        /// <remarks>Pokud originální bod bude NULL, tak vrácí instanci nového bodu [0,0].</remarks>
         public static PointF DegreesToPoint(double degrees, double radius, Point origin)
         {
             PointF newPoint = new PointF();
-
-            if (origin == null)
-                return newPoint;
-
             double radians = ToRadian(degrees);
 
             newPoint.X = (float)(Math.Cos(radians) * radius + origin.X);
@@ -145,12 +144,8 @@ namespace Ophite.Base
         /// <param name="angle">Bod, od kterého se má spočítat úhel.</param>
         /// <param name="origin">Originální bod.</param>
         /// <returns>Vrací úhel.</returns>
-        /// <remarks>Pokud nějaký vstupní bod bude NULL, tak vrácí 0.</remarks>
         public static double AngleToDegrees(Point angle, Point origin)
         {
-            if (angle == null || origin == null)
-                return 0;
-
             int deltaX = origin.X - angle.X;
             int deltaY = origin.Y - angle.Y;
 
@@ -168,17 +163,16 @@ namespace Ophite.Base
         /// <remarks> Vstupní číslo musí být větší než 0, jinak vrácí 1.</remarks>
         public static ulong Factorial(uint number)
         {
-            if (number <= 1)
+            if (number < 2)
                 return 1;
 
-            ulong val = 1;
+            ulong value = 1;
 
             for (int i = 2; i <= number; i++)
             {
-                val *= (ulong)i;
+                value *= (ulong)i;
             }
-
-            return val;
+            return value;
         }
 
         /// <summary>
@@ -209,7 +203,7 @@ namespace Ophite.Base
         /// <returns>Vrací radiány.</returns>
         public static double ToRadian(double degree)
         {
-            return (degree * Math.PI / 180.0);
+            return (degree * PI / 180.0);
         }
 
         /// <summary>
@@ -219,7 +213,71 @@ namespace Ophite.Base
         /// <returns>Vrací desetinné stupně.</returns>
         public static double ToDegree(double radian)
         {
-            return (radian / Math.PI * 180.0);
+            return (radian / PI * 180.0);
+        }
+
+        /// <summary>
+        /// Zjišťuje, zda se jedná o dokonalé číslo.
+        /// </summary>
+        /// <param name="number">Testované číslo.</param>
+        /// <returns>Vrací TRUE, pokud se jedná o dokonalé číslo.</returns>
+        public static bool IsPerfectNumber(ulong number)
+        {
+            if (number % 2 == 1)
+                return false;
+
+            ulong result = 1;
+            ulong i = 2;
+
+            while (i <= Math.Sqrt(number))
+            {
+                if (number % i == 0)
+                {
+                    result += i;
+                    result += number / i;
+                }
+                i++;
+            }
+
+            if (Math.Pow(i, 2) == number)
+                result -= i;
+
+            return result == number;
+        }
+
+        /// <summary>
+        /// Zjišťuje největšího společného dělitele.
+        /// </summary>
+        /// <param name="a">První číslo.</param>
+        /// <param name="b">Druhé číslo.</param>
+        /// <returns>Vrací největší společný dělitel.</returns>
+        /// <exception cref="ArgumentException"></exception>
+        public static int Gcd(int a, int b)
+        {
+            if (a < 1 || b < 1)
+                throw new ArgumentException("Žádný parametr nesmí být menší než 1.");
+
+            while (b != 0)
+            {
+                int tmp = a;
+                a = b;
+                b = tmp % b;
+            }
+            return a;
+        }
+
+        /// <summary>
+        /// Nejmenší společný násobek.
+        /// </summary>
+        /// <param name="a">První číslo.</param>
+        /// <param name="b">Druhé číslo.</param>
+        /// <returns>Vrací nejmenší společný násobek.</returns>
+        public static int Lcm(int a, int b)
+        {
+            if (a == 0 || b == 0)
+                return 0;
+
+            return (a * b) / Gcd(a, b);
         }
     }
 }
