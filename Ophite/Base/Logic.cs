@@ -171,7 +171,14 @@ namespace Ophite.Base
             if (number <= 1)
                 return 1;
 
-            return number * Factorial(number - 1);
+            ulong val = 1;
+
+            for (int i = 2; i <= number; i++)
+            {
+                val *= (ulong)i;
+            }
+
+            return val;
         }
 
         /// <summary>
@@ -179,8 +186,7 @@ namespace Ophite.Base
         /// </summary>
         /// <param name="number">Vstupní číslo.</param>
         /// <returns>Vrací Fibonacciho posloupnost.</returns>
-        /// <remarks>Vstupní číslo musí být větší než 1, jinak vrácí vstupní číslo.
-        /// Při vstupním čísle 40 a víc to může trvat poměrně dlouho.</remarks>
+        /// <remarks>Vstupní číslo musí být větší než 1, jinak vrácí vstupní číslo.</remarks>
         public static ulong Fibonacci(uint number)
         {
             ulong first = 0;

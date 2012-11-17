@@ -37,5 +37,13 @@ namespace OphiteTests
 
             Assert.AreEqual((ulong)55, tenth);
         }
+
+        [TestMethod]
+        public void Faktorial_TenFactorial()
+        {
+            ulong tenFactorial = Ophite.Base.Logic.Factorial(10);
+
+            Assert.AreEqual((ulong)3628800, tenFactorial);
+        }
     }
 }
