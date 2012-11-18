@@ -1,6 +1,8 @@
-﻿using Ophite.Extension;
+﻿using Ophite.Exceptions;
 using System;
+using System.Reflection;
 using System.Runtime.InteropServices;
+using System.Security;
 
 namespace Ophite.Base
 {
@@ -27,8 +29,12 @@ namespace Ophite.Base
         /// <typeparam name="GenericType">Vstupní generický typ.</typeparam>
         /// <param name="obj">Vstupní objekt, který by měl být stejného typu jako generický.</param>
         /// <returns>Vrací TRUE, pokud objekt obsahuje stejný typ jako je generický.</returns>
+        /// <remarks>Pokud vstupní parametr bude NULL, tak vrací FALSE.</remarks>
         public static bool Equals<GenericType>(object obj)
         {
+            if (obj == null)
+                return false;
+
             Type type = typeof(GenericType);
             Type input = obj.GetType();
 
@@ -42,13 +48,21 @@ namespace Ophite.Base
         /// <param name="types">Seznam typů parametrů.</param>
         /// <param name="args">Hodnoty parametrů.</param>
         /// <returns>Vrací novou instanci objektu.</returns>
-        /// <remarks>Pokud nějaký parametr bude NULL, tak vrací výchozí hodnotu generického typu.</remarks>
+        /// <exception cref="OphiteException">7</exception>
         public static T CallConstructor<T>(Type[] types, params object[] args) where T : new()
         {
-            if (types == null || args == null)
-                return default(T);
+            try
+            {
+                return (T)new T().GetType().GetConstructor(types).Invoke(args);
+            }
+            catch (ArgumentNullException ex) { throw new OphiteException(ExceptionType.ArgumentNullException, ex); }
+            catch (MethodAccessException ex) { throw new OphiteException(ExceptionType.MethodAccessException, ex); }
+            catch (MemberAccessException ex) { throw new OphiteException(ExceptionType.MemberAccessException, ex); }
+            catch (TargetInvocationException ex) { throw new OphiteException(ExceptionType.TargetInvocationException, ex); }
+            catch (TargetParameterCountException ex) { throw new OphiteException(ExceptionType.TargetParameterCountException, ex); }
+            catch (NotSupportedException ex) { throw new OphiteException(ExceptionType.NotSupportedException, ex); }
+            catch (SecurityException ex) { throw new OphiteException(ExceptionType.SecurityException, ex); }
 
-            return (T)new T().GetType().GetConstructor(types).Invoke(args);
         }
 
         /// <summary>
@@ -58,16 +72,23 @@ namespace Ophite.Base
         /// <param name="type">Typ vstupního parametru.</param>
         /// <param name="arg">Hodnota parametru.</param>
         /// <returns>Vrací novou instanci objektu.</returns>
-        /// <remarks>Pokud nějaký parametr bude NULL, tak vrací výchozí hodnotu generického typu.</remarks>
+        /// <exception cref="OphiteException">7</exception>
         public static T CallConstructor<T>(Type type, object arg) where T : new()
         {
-            if (type == null)
-                return default(T);
-
             Type[] types = new Type[] { type };
             object[] args = new object[] { arg };
 
-            return (T)new T().GetType().GetConstructor(types).Invoke(args);
+            try
+            {
+                return (T)new T().GetType().GetConstructor(types).Invoke(args);
+            }
+            catch (ArgumentNullException ex) { throw new OphiteException(ExceptionType.ArgumentNullException, ex); }
+            catch (MethodAccessException ex) { throw new OphiteException(ExceptionType.MethodAccessException, ex); }
+            catch (MemberAccessException ex) { throw new OphiteException(ExceptionType.MemberAccessException, ex); }
+            catch (TargetInvocationException ex) { throw new OphiteException(ExceptionType.TargetInvocationException, ex); }
+            catch (TargetParameterCountException ex) { throw new OphiteException(ExceptionType.TargetParameterCountException, ex); }
+            catch (NotSupportedException ex) { throw new OphiteException(ExceptionType.NotSupportedException, ex); }
+            catch (SecurityException ex) { throw new OphiteException(ExceptionType.SecurityException, ex); }
         }
 
         /// <summary>
@@ -76,18 +97,21 @@ namespace Ophite.Base
         /// <typeparam name="T">Vstupní typ strukůry.</typeparam>
         /// <param name="bytes">Data pro převod.</param>
         /// <returns>Vrací struktůru podle generického typu.</returns>
-        /// <remarks>Pokud nějaký parametr bude NULL, tak vrací výchozí hodnotu generického typu.</remarks>
+        /// <exception cref="OphiteException">3</exception>
         public static T ToStructure<T>(byte[] bytes) where T : struct
         {
-            if (bytes.IsEmpty())
-                return default(T);
+            try
+            {
+                GCHandle gch = GCHandle.Alloc(bytes, GCHandleType.Pinned);
+                IntPtr ptr = gch.AddrOfPinnedObject();
+                T result = (T)Marshal.PtrToStructure(ptr, typeof(T));
 
-            GCHandle gch = GCHandle.Alloc(bytes, GCHandleType.Pinned);
-            IntPtr ptr = gch.AddrOfPinnedObject();
-            T result = (T)Marshal.PtrToStructure(ptr, typeof(T));
-
-            gch.Free();
-            return result;
+                gch.Free();
+                return result;
+            }
+            catch (ArgumentNullException ex) { throw new OphiteException(ExceptionType.ArgumentNullException, ex); }
+            catch (ArgumentException ex) { throw new OphiteException(ExceptionType.ArgumentException, ex); }
+            catch (InvalidOperationException ex) { throw new OphiteException(ExceptionType.InvalidOperationException, ex); }
         }
     }
 }

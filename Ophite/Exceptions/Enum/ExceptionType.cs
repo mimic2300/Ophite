@@ -66,6 +66,31 @@
         PlatformNotSupportedException,
 
         /// <summary>
+        /// Pokud se nezdaří pokus o přístup členské třídy (objektu).
+        /// </summary>
+        MemberAccessException,
+
+        /// <summary>
+        /// Neplatný pokus o přístup k metodě, jako je přístup k soukromé metodě z částečně důvěryhodného kódu.
+        /// </summary>
+        MethodAccessException,
+
+        /// <summary>
+        /// Metoda vyvolaná prostřednictvím reflexe.
+        /// </summary>
+        TargetInvocationException,
+
+        /// <summary>
+        /// Zjištěna chyba zabezpečení.
+        /// </summary>
+        SecurityException,
+
+        /// <summary>
+        /// Počet parametrů vyvolání neodpovídá očekávanému počtu.
+        /// </summary>
+        TargetParameterCountException,
+
+        /// <summary>
         /// Jeden z argumentů v uvedené metodě není platný.
         /// </summary>
         ArgumentException = 0x1000,

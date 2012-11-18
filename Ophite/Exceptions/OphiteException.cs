@@ -37,6 +37,17 @@ namespace Ophite.Exceptions
         /// Rozšířený konstruktor.
         /// </summary>
         /// <param name="type">Typ vyjímky.</param>
+        /// <param name="innerException">Vyhozená vyjímka.</param>
+        public OphiteException(ExceptionType type, Exception innerException)
+            : base(innerException.Message, innerException)
+        {
+            this.type = type;
+        }
+
+        /// <summary>
+        /// Rozšířený konstruktor.
+        /// </summary>
+        /// <param name="type">Typ vyjímky.</param>
         /// <param name="message">Vlastní zpráva.></param>
         /// <param name="innerException">Vyhozená vyjímka.</param>
         public OphiteException(ExceptionType type, string message, Exception innerException)
