@@ -46,6 +46,7 @@
     <Compile Include="Base\Base.cs" />
     <Compile Include="Base\Cmd.cs" />
     <Compile Include="Base\Generic.cs" />
+    <Compile Include="Exceptions\Enum\ExceptionType.cs" />
     <Compile Include="Exceptions\OphiteException.cs" />
     <Compile Include="Extension\Array.cs" />
     <Compile Include="Extension\Converter.cs" />

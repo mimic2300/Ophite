@@ -124,11 +124,11 @@ namespace OphiteTests.Base
         {
             bool result = Logic.IsPrimeNumber(503);
 
-            Assert.AreEqual(result, true);
+            Assert.AreEqual(true, result);
 
             result = Logic.IsPrimeNumber(500);
 
-            Assert.AreEqual(result, false);
+            Assert.AreEqual(false, result);
         }
 
         [TestMethod]
