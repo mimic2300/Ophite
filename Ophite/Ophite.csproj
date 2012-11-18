@@ -48,18 +48,23 @@
     <Compile Include="Base\Generic.cs" />
     <Compile Include="Exceptions\Enum\ExceptionType.cs" />
     <Compile Include="Exceptions\OphiteException.cs" />
-    <Compile Include="Extension\Array.cs" />
+    <Compile Include="Extension\ArrayEx.cs" />
     <Compile Include="Extension\Converter.cs" />
+    <Compile Include="Extension\DecimalEx.cs" />
     <Compile Include="Extension\Enum\RegexModify.cs" />
     <Compile Include="Extension\Enum\RegexParse.cs" />
     <Compile Include="Extension\Enum\TextFormat.cs" />
     <Compile Include="Base\Logic.cs" />
+    <Compile Include="Extension\IntEx.cs" />
+    <Compile Include="Extension\LongEx.cs" />
+    <Compile Include="Extension\ShortEx.cs" />
+    <Compile Include="Extension\StringEx.cs" />
     <Compile Include="Global.cs" />
     <Compile Include="Const.cs" />
     <Compile Include="Ophite.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Extension\Enum\RegexMatch.cs" />
-    <Compile Include="Extension\Regex.cs" />
+    <Compile Include="Extension\RegexEx.cs" />
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

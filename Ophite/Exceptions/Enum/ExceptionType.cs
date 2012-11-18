@@ -86,6 +86,31 @@
         SecurityException,
 
         /// <summary>
+        /// Metodě je předán nesprávný počet rozměrů pole.
+        /// </summary>
+        RankException,
+
+        /// <summary>
+        /// Formát argument nesplňuje specifikace parametru metody.
+        /// </summary>
+        FormatException,
+
+        /// <summary>
+        /// Selhání kodéru.
+        /// </summary>
+        EncoderFallbackException,
+
+        /// <summary>
+        /// Chyba při aritmetický operaci nebo převodu, který způsobí přetečení.
+        /// </summary>
+        OverflowException,
+
+        /// <summary>
+        /// Doba spouštění metody a porovnávání regulárního výrazu přesáhne jeho časový limit.
+        /// </summary>
+        RegexMatchTimeoutException,
+
+        /// <summary>
         /// Počet parametrů vyvolání neodpovídá očekávanému počtu.
         /// </summary>
         TargetParameterCountException,

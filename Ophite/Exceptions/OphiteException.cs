@@ -13,6 +13,18 @@ namespace Ophite.Exceptions
         #region Konstruktory
 
         /// <summary>
+        /// Konstruktor pro předání instance OphiteException.
+        /// </summary>
+        /// <param name="exception">Instance vyjímky OphiteException.</param>
+        public OphiteException(OphiteException exception)
+            // TODO: Není ošetřen vstupní parametr jako NULL.
+            : base(exception.Message, exception.InnerException)
+        {
+            this.type = exception.type;
+            this.time = exception.time;
+        }
+
+        /// <summary>
         /// Hlavní konstruktor.
         /// </summary>
         /// <param name="type">Typ vyjímky.</param>
