@@ -47,6 +47,7 @@
     <Compile Include="Base\Cmd.cs" />
     <Compile Include="Base\Generic.cs" />
     <Compile Include="Exceptions\OphiteException.cs" />
+    <Compile Include="Extension\Array.cs" />
     <Compile Include="Extension\Converter.cs" />
     <Compile Include="Extension\Enum\RegexModify.cs" />
     <Compile Include="Extension\Enum\RegexParse.cs" />

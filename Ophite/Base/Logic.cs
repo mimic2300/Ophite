@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Drawing;
 
 namespace Ophite.Base
@@ -19,6 +20,11 @@ namespace Ophite.Base
         /// Druhá mocnina PI.
         /// </summary>
         public const double PI2 = 9.86960440108;
+
+        /// <summary>
+        /// 180° s PI.
+        /// </summary>
+        public const double PI180 = PI / 180;
 
         /// <summary>
         /// Gravitace (hodnota gravitačního zrychlení).
@@ -81,25 +87,30 @@ namespace Ophite.Base
         /// <summary>
         /// Vypočte vzdálenost, mezi dvěma GPS.
         /// </summary>
-        /// <param name="latit1">GPS 1: latit.</param>
         /// <param name="longit1">GPS 1: longit.</param>
-        /// <param name="latit2">GPS 2: latit.</param>
+        /// <param name="latit1">GPS 1: latit.</param>
         /// <param name="longit2">GPS 2: longit.</param>
-        /// <param name="unit">Do jakých jednotek se má vzdálenost převést (K - km, M - míle).</param>
+        /// <param name="latit2">GPS 2: latit.</param>
+        /// <param name="unit">Do jakých jednotek se má vzdálenost převést (N - námořní míle, K - km, M - míle).</param>
         /// <returns>Vrací vzdálenost mezi dvěma GPS.</returns>
-        public static double GpsDistance(double latit1, double longit1, double latit2, double longit2, char unit = 'K')
+        public static double GpsDistance(double longit1, double latit1, double longit2, double latit2, char unit = 'N')
         {
-            double theta = longit1 - longit2;
-            double dist = Math.Sin(ToRadian(latit1)) * Math.Sin(ToRadian(latit2)) +
-                          Math.Cos(ToRadian(latit1)) * Math.Cos(ToRadian(latit2)) *
-                          Math.Cos(ToRadian(theta));
+            const double R = 3956;
 
-            dist = Math.Acos(dist);
-            dist = ToDegree(dist);
-            dist = dist * 60 * 1.1515;
+            longit1 *= PI180;
+            latit1 *= PI180;
+            longit2 *= PI180;
+            latit2 *= PI180;
+
+            double distLong = longit2 - longit1;
+            double distLat = latit2 - latit1;
+            double a = Math.Pow(Math.Sin(distLat / 2), 2) + Math.Cos(latit1) * Math.Cos(latit2) * Math.Pow(Math.Sin(distLong / 2), 2);
+            double c = 2 * Math.Atan2(Math.Sqrt(a), Math.Sqrt(1 - a));
+            double dist = R * c;
 
             switch (unit)
             {
+                case 'N': return dist;            // namořní míle
                 case 'K': return dist * 1.609344; // km
                 case 'M': return dist * 0.8684;   // míle
                 default: return dist;
@@ -246,6 +257,30 @@ namespace Ophite.Base
         }
 
         /// <summary>
+        /// Zjišťuje, zda se jedná o prvočíslo.
+        /// </summary>
+        /// <param name="number">Testovací číslo.</param>
+        /// <returns>Vrací TRUE, pokud je číslo prvočíslo.</returns>
+        public static bool IsPrimeNumber(ulong number)
+        {
+            if (number <= 1)
+                return false;
+
+            if (number == 2)
+                return true;
+
+            if (number % 2 == 0)
+                return false;
+
+            for (ulong i = 3; i <= Math.Sqrt(number); i += 2)
+            {
+                if (number % i == 0)
+                    return false;
+            }
+            return true;
+        }
+
+        /// <summary>
         /// Zjišťuje největšího společného dělitele.
         /// </summary>
         /// <param name="a">První číslo.</param>
@@ -278,6 +313,30 @@ namespace Ophite.Base
                 return 0;
 
             return (a * b) / Gcd(a, b);
+        }
+
+        /// <summary>
+        /// Rozloží číslo na prvočíselné součinitele.
+        /// </summary>
+        /// <param name="number">Číslo, které se má rozložit.</param>
+        /// <param name="isPrimeNumber">Vrací TRUE v případě, že vstupní číslo je prvočíslo.</param>
+        /// <returns>Vrací pole prvočíselných součinitelů</returns>
+        /// <remarks>Pokud vstupní číslo bude menší jak 2, tak vrací prázdné pole.</remarks>
+        public static ulong[] Factorization(ulong number, out bool isPrimeNumber)
+        {
+            List<ulong> result = new List<ulong>();
+
+            for (ulong i = 2; i <= Math.Sqrt(number); i++)
+            {
+                while (number % i == 0)
+                {
+                    number = number / i;
+                    result.Add(i);
+                }
+            }
+            isPrimeNumber = (number > 1);
+
+            return result.ToArray();
         }
     }
 }

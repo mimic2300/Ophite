@@ -29,7 +29,7 @@ namespace Ophite.Extension
             byte[] data = BitConverter.GetBytes(number);
 
             if (BitConverter.IsLittleEndian)
-                Array.Reverse(data);
+                System.Array.Reverse(data);
 
             return data;
         }
@@ -49,7 +49,7 @@ namespace Ophite.Extension
             byte[] data = BitConverter.GetBytes(number);
 
             if (BitConverter.IsLittleEndian)
-                Array.Reverse(data);
+                System.Array.Reverse(data);
 
             return data;
         }
@@ -69,7 +69,7 @@ namespace Ophite.Extension
             byte[] data = BitConverter.GetBytes(number);
 
             if (BitConverter.IsLittleEndian)
-                Array.Reverse(data);
+                System.Array.Reverse(data);
 
             return data;
         }
@@ -89,7 +89,7 @@ namespace Ophite.Extension
             byte[] data = BitConverter.GetBytes(number);
 
             if (BitConverter.IsLittleEndian)
-                Array.Reverse(data);
+                System.Array.Reverse(data);
 
             return data;
         }
@@ -109,7 +109,7 @@ namespace Ophite.Extension
             byte[] data = BitConverter.GetBytes(number);
 
             if (BitConverter.IsLittleEndian)
-                Array.Reverse(data);
+                System.Array.Reverse(data);
 
             return data;
         }
@@ -150,7 +150,7 @@ namespace Ophite.Extension
             byte[] data = BitConverter.GetBytes(number);
 
             if (BitConverter.IsLittleEndian)
-                Array.Reverse(data);
+                System.Array.Reverse(data);
 
             return data;
         }
@@ -170,7 +170,7 @@ namespace Ophite.Extension
             byte[] data = BitConverter.GetBytes(number);
 
             if (BitConverter.IsLittleEndian)
-                Array.Reverse(data);
+                System.Array.Reverse(data);
 
             return data;
         }
@@ -190,7 +190,7 @@ namespace Ophite.Extension
             byte[] data = BitConverter.GetBytes(number);
 
             if (BitConverter.IsLittleEndian)
-                Array.Reverse(data);
+                System.Array.Reverse(data);
 
             return data;
         }
@@ -569,9 +569,9 @@ namespace Ophite.Extension
 
             if (ignoreCase)
             {
-                return Array.Exists(strings, str => { return str.ToLower() == text.ToLower(); });
+                return System.Array.Exists(strings, str => { return str.ToLower() == text.ToLower(); });
             }
-            else return Array.Exists(strings, str => { return str == text; });
+            else return System.Array.Exists(strings, str => { return str == text; });
         }
 
         /// <summary>
@@ -638,7 +638,7 @@ namespace Ophite.Extension
             try
             {
                 if (BitConverter.IsLittleEndian)
-                    Array.Reverse(data);
+                    System.Array.Reverse(data);
 
                 return BitConverter.ToInt16(data, 0);
             }
@@ -656,7 +656,7 @@ namespace Ophite.Extension
             try
             {
                 if (BitConverter.IsLittleEndian)
-                    Array.Reverse(data);
+                    System.Array.Reverse(data);
 
                 return BitConverter.ToUInt16(data, 0);
             }
@@ -674,7 +674,7 @@ namespace Ophite.Extension
             try
             {
                 if (BitConverter.IsLittleEndian)
-                    Array.Reverse(data);
+                    System.Array.Reverse(data);
 
                 return BitConverter.ToInt32(data, 0);
             }
@@ -692,7 +692,7 @@ namespace Ophite.Extension
             try
             {
                 if (BitConverter.IsLittleEndian)
-                    Array.Reverse(data);
+                    System.Array.Reverse(data);
 
                 return BitConverter.ToUInt32(data, 0);
             }
@@ -710,7 +710,7 @@ namespace Ophite.Extension
             try
             {
                 if (BitConverter.IsLittleEndian)
-                    Array.Reverse(data);
+                    System.Array.Reverse(data);
 
                 return BitConverter.ToInt64(data, 0);
             }
@@ -728,7 +728,7 @@ namespace Ophite.Extension
             try
             {
                 if (BitConverter.IsLittleEndian)
-                    Array.Reverse(data);
+                    System.Array.Reverse(data);
 
                 return BitConverter.ToUInt64(data, 0);
             }
@@ -746,7 +746,7 @@ namespace Ophite.Extension
             try
             {
                 if (BitConverter.IsLittleEndian)
-                    Array.Reverse(data);
+                    System.Array.Reverse(data);
 
                 return BitConverter.ToSingle(data, 0);
             }
@@ -764,7 +764,7 @@ namespace Ophite.Extension
             try
             {
                 if (BitConverter.IsLittleEndian)
-                    Array.Reverse(data);
+                    System.Array.Reverse(data);
 
                 return BitConverter.ToDouble(data, 0);
             }
