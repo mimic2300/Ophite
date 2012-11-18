@@ -1,5 +1,5 @@
 ﻿
-namespace Ophite.Exception
+namespace Ophite.Exceptions
 {
     public class OphiteException : System.Exception
     {
