@@ -63,7 +63,7 @@
     <Compile Include="Extension\OShort.cs" />
     <Compile Include="Extension\OULong.cs" />
     <Compile Include="Extension\OUShort.cs" />
-    <Compile Include="Extension\StringEx.cs" />
+    <Compile Include="Extension\OString.cs" />
     <Compile Include="Global.cs" />
     <Compile Include="Const.cs" />
     <Compile Include="Ophite.cs" />

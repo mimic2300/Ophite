@@ -10,7 +10,7 @@ namespace Ophite.Extension
     /// <summary>
     /// Rozšiřuje původní datový typ "string".
     /// </summary>
-    public static class StringEx
+    public static class OString
     {
         /// <summary>
         /// Kontroluje, zda vstupní text je prázdný nebo NULL.
@@ -26,36 +26,40 @@ namespace Ophite.Extension
         /// Převádí text na pole byte v kódování ASCII.
         /// </summary>
         /// <param name="text">Vstupní text.</param>
+        /// <param name="toBigEndian">Má se převést pole byte do BigEndian?</param>
         /// <returns>Vrací pole byte z ASCII textu.</returns>
-        /// <exception cref="OphiteException"></exception>
         /// <exception cref="ArgumentNullException"></exception>
-        /// <exception cref="EncoderFallbackException"></exception>
-        public static byte[] AsBytesASCII(this string text)
+        public static byte[] AsBytesASCII(this string text, bool toBigEndian = false)
         {
-            try
-            {
-                return Encoding.ASCII.GetBytes(text);
-            }
-            catch (ArgumentNullException ex) { throw new OphiteException(ExceptionType.ArgumentNullException, ex); }
-            catch (EncoderFallbackException ex) { throw new OphiteException(ExceptionType.EncoderFallbackException, ex); }
+            byte[] data = Encoding.ASCII.GetBytes(text);
+
+            if (data.IsEmpty())
+                return data;
+
+            if (toBigEndian && BitConverter.IsLittleEndian)
+                Array.Reverse(data);
+
+            return data;
         }
 
         /// <summary>
         /// Převádí text na pole byte v kódování UTF8.
         /// </summary>
         /// <param name="text">Vstupní text.</param>
+        /// <param name="toBigEndian">Má se převést pole byte do BigEndian?</param>
         /// <returns>Vrací pole byte z UTF8 textu.</returns>
-        /// <exception cref="OphiteException"></exception>
         /// <exception cref="ArgumentNullException"></exception>
-        /// <exception cref="EncoderFallbackException"></exception>
-        public static byte[] AsBytesUTF8(this string text)
+        public static byte[] AsBytesUTF8(this string text, bool toBigEndian = false)
         {
-            try
-            {
-                return Encoding.UTF8.GetBytes(text);
-            }
-            catch (ArgumentNullException ex) { throw new OphiteException(ExceptionType.ArgumentNullException, ex); }
-            catch (EncoderFallbackException ex) { throw new OphiteException(ExceptionType.EncoderFallbackException, ex); }
+            byte[] data = Encoding.UTF8.GetBytes(text);
+
+            if (data.IsEmpty())
+                return data;
+
+            if (toBigEndian && BitConverter.IsLittleEndian)
+                Array.Reverse(data);
+
+            return data;
         }
 
         /// <summary>
@@ -65,25 +69,18 @@ namespace Ophite.Extension
         /// <param name="ignoreException">Má se ignorovat vyjímka při chybném převodu?</param>
         /// <returns>Vrací číslo short.</returns>
         /// <remarks>Pokud se bude ignorovat vyjímka a převod selže, tak vrací 0.</remarks>
-        /// <exception cref="OphiteException"></exception>
         /// <exception cref="ArgumentNullException"></exception>
         /// <exception cref="FormatException"></exception>
         /// <exception cref="OverflowException"></exception>
         public static short AsShort(this string text, bool ignoreException = false)
         {
-            try
+            if (ignoreException)
             {
-                if (ignoreException)
-                {
-                    short value;
-                    short.TryParse(text, out value);
-                    return value;
-                }
-                return short.Parse(text);
+                short value;
+                short.TryParse(text, out value);
+                return value;
             }
-            catch (ArgumentNullException ex) { throw new OphiteException(ExceptionType.ArgumentNullException, ex); }
-            catch (FormatException ex) { throw new OphiteException(ExceptionType.FormatException, ex); }
-            catch (OverflowException ex) { throw new OphiteException(ExceptionType.OverflowException, ex); }
+            return short.Parse(text);
         }
 
         /// <summary>
@@ -93,25 +90,18 @@ namespace Ophite.Extension
         /// <param name="ignoreException">Má se ignorovat vyjímka při chybném převodu?</param>
         /// <returns>Vrací číslo ushort.</returns>
         /// <remarks>Pokud se bude ignorovat vyjímka a převod selže, tak vrací 0.</remarks>
-        /// <exception cref="OphiteException"></exception>
         /// <exception cref="ArgumentNullException"></exception>
         /// <exception cref="FormatException"></exception>
         /// <exception cref="OverflowException"></exception>
         public static ushort AsUShort(this string text, bool ignoreException = false)
         {
-            try
+            if (ignoreException)
             {
-                if (ignoreException)
-                {
-                    ushort value;
-                    ushort.TryParse(text, out value);
-                    return value;
-                }
-                return ushort.Parse(text);
+                ushort value;
+                ushort.TryParse(text, out value);
+                return value;
             }
-            catch (ArgumentNullException ex) { throw new OphiteException(ExceptionType.ArgumentNullException, ex); }
-            catch (FormatException ex) { throw new OphiteException(ExceptionType.FormatException, ex); }
-            catch (OverflowException ex) { throw new OphiteException(ExceptionType.OverflowException, ex); }
+            return ushort.Parse(text);
         }
 
         /// <summary>
@@ -121,25 +111,18 @@ namespace Ophite.Extension
         /// <param name="ignoreException">Má se ignorovat vyjímka při chybném převodu?</param>
         /// <returns>Vrací číslo int.</returns>
         /// <remarks>Pokud se bude ignorovat vyjímka a převod selže, tak vrací 0.</remarks>
-        /// <exception cref="OphiteException"></exception>
         /// <exception cref="ArgumentNullException"></exception>
         /// <exception cref="FormatException"></exception>
         /// <exception cref="OverflowException"></exception>
         public static int AsInt(this string text, bool ignoreException = false)
         {
-            try
+            if (ignoreException)
             {
-                if (ignoreException)
-                {
-                    int value;
-                    int.TryParse(text, out value);
-                    return value;
-                }
-                return int.Parse(text);
+                int value;
+                int.TryParse(text, out value);
+                return value;
             }
-            catch (ArgumentNullException ex) { throw new OphiteException(ExceptionType.ArgumentNullException, ex); }
-            catch (FormatException ex) { throw new OphiteException(ExceptionType.FormatException, ex); }
-            catch (OverflowException ex) { throw new OphiteException(ExceptionType.OverflowException, ex); }
+            return int.Parse(text);
         }
 
         /// <summary>
@@ -149,25 +132,18 @@ namespace Ophite.Extension
         /// <param name="ignoreException">Má se ignorovat vyjímka při chybném převodu?</param>
         /// <returns>Vrací číslo uint.</returns>
         /// <remarks>Pokud se bude ignorovat vyjímka a převod selže, tak vrací 0.</remarks>
-        /// <exception cref="OphiteException"></exception>
         /// <exception cref="ArgumentNullException"></exception>
         /// <exception cref="FormatException"></exception>
         /// <exception cref="OverflowException"></exception>
         public static uint AsUInt(this string text, bool ignoreException = false)
         {
-            try
+            if (ignoreException)
             {
-                if (ignoreException)
-                {
-                    uint value;
-                    uint.TryParse(text, out value);
-                    return value;
-                }
-                return uint.Parse(text);
+                uint value;
+                uint.TryParse(text, out value);
+                return value;
             }
-            catch (ArgumentNullException ex) { throw new OphiteException(ExceptionType.ArgumentNullException, ex); }
-            catch (FormatException ex) { throw new OphiteException(ExceptionType.FormatException, ex); }
-            catch (OverflowException ex) { throw new OphiteException(ExceptionType.OverflowException, ex); }
+            return uint.Parse(text);
         }
 
         /// <summary>
@@ -177,25 +153,18 @@ namespace Ophite.Extension
         /// <param name="ignoreException">Má se ignorovat vyjímka při chybném převodu?</param>
         /// <returns>Vrací číslo long.</returns>
         /// <remarks>Pokud se bude ignorovat vyjímka a převod selže, tak vrací 0.</remarks>
-        /// <exception cref="OphiteException"></exception>
         /// <exception cref="ArgumentNullException"></exception>
         /// <exception cref="FormatException"></exception>
         /// <exception cref="OverflowException"></exception>
         public static long AsLong(this string text, bool ignoreException = false)
         {
-            try
+            if (ignoreException)
             {
-                if (ignoreException)
-                {
-                    long value;
-                    long.TryParse(text, out value);
-                    return value;
-                }
-                return long.Parse(text);
+                long value;
+                long.TryParse(text, out value);
+                return value;
             }
-            catch (ArgumentNullException ex) { throw new OphiteException(ExceptionType.ArgumentNullException, ex); }
-            catch (FormatException ex) { throw new OphiteException(ExceptionType.FormatException, ex); }
-            catch (OverflowException ex) { throw new OphiteException(ExceptionType.OverflowException, ex); }
+            return long.Parse(text);
         }
 
         /// <summary>
@@ -205,25 +174,18 @@ namespace Ophite.Extension
         /// <param name="ignoreException">Má se ignorovat vyjímka při chybném převodu?</param>
         /// <returns>Vrací číslo ulong.</returns>
         /// <remarks>Pokud se bude ignorovat vyjímka a převod selže, tak vrací 0.</remarks>
-        /// <exception cref="OphiteException"></exception>
         /// <exception cref="ArgumentNullException"></exception>
         /// <exception cref="FormatException"></exception>
         /// <exception cref="OverflowException"></exception>
         public static ulong AsULong(this string text, bool ignoreException = false)
         {
-            try
+            if (ignoreException)
             {
-                if (ignoreException)
-                {
-                    ulong value;
-                    ulong.TryParse(text, out value);
-                    return value;
-                }
-                return ulong.Parse(text);
+                ulong value;
+                ulong.TryParse(text, out value);
+                return value;
             }
-            catch (ArgumentNullException ex) { throw new OphiteException(ExceptionType.ArgumentNullException, ex); }
-            catch (FormatException ex) { throw new OphiteException(ExceptionType.FormatException, ex); }
-            catch (OverflowException ex) { throw new OphiteException(ExceptionType.OverflowException, ex); }
+            return ulong.Parse(text);
         }
 
         /// <summary>
@@ -233,25 +195,18 @@ namespace Ophite.Extension
         /// <param name="ignoreException">Má se ignorovat vyjímka při chybném převodu?</param>
         /// <returns>Vrací číslo float.</returns>
         /// <remarks>Pokud se bude ignorovat vyjímka a převod selže, tak vrací 0.</remarks>
-        /// <exception cref="OphiteException"></exception>
         /// <exception cref="ArgumentNullException"></exception>
         /// <exception cref="FormatException"></exception>
         /// <exception cref="OverflowException"></exception>
         public static float AsFloat(this string text, bool ignoreException = false)
         {
-            try
+            if (ignoreException)
             {
-                if (ignoreException)
-                {
-                    float value;
-                    float.TryParse(text, out value);
-                    return value;
-                }
-                return float.Parse(text);
+                float value;
+                float.TryParse(text, out value);
+                return value;
             }
-            catch (ArgumentNullException ex) { throw new OphiteException(ExceptionType.ArgumentNullException, ex); }
-            catch (FormatException ex) { throw new OphiteException(ExceptionType.FormatException, ex); }
-            catch (OverflowException ex) { throw new OphiteException(ExceptionType.OverflowException, ex); }
+            return float.Parse(text, CultureInfo.InvariantCulture);
         }
 
         /// <summary>
@@ -261,25 +216,18 @@ namespace Ophite.Extension
         /// <param name="ignoreException">Má se ignorovat vyjímka při chybném převodu?</param>
         /// <returns>Vrací číslo double.</returns>
         /// <remarks>Pokud se bude ignorovat vyjímka a převod selže, tak vrací 0.</remarks>
-        /// <exception cref="OphiteException"></exception>
         /// <exception cref="ArgumentNullException"></exception>
         /// <exception cref="FormatException"></exception>
         /// <exception cref="OverflowException"></exception>
         public static double AsDouble(this string text, bool ignoreException = false)
         {
-            try
+            if (ignoreException)
             {
-                if (ignoreException)
-                {
-                    double value;
-                    double.TryParse(text, out value);
-                    return value;
-                }
-                return double.Parse(text);
+                double value;
+                double.TryParse(text, out value);
+                return value;
             }
-            catch (ArgumentNullException ex) { throw new OphiteException(ExceptionType.ArgumentNullException, ex); }
-            catch (FormatException ex) { throw new OphiteException(ExceptionType.FormatException, ex); }
-            catch (OverflowException ex) { throw new OphiteException(ExceptionType.OverflowException, ex); }
+            return double.Parse(text, CultureInfo.InvariantCulture);
         }
 
         /// <summary>
@@ -289,25 +237,18 @@ namespace Ophite.Extension
         /// <param name="ignoreException">Má se ignorovat vyjímka při chybném převodu?</param>
         /// <returns>Vrací číslo decimal.</returns>
         /// <remarks>Pokud se bude ignorovat vyjímka a převod selže, tak vrací 0.</remarks>
-        /// <exception cref="OphiteException"></exception>
         /// <exception cref="ArgumentNullException"></exception>
         /// <exception cref="FormatException"></exception>
         /// <exception cref="OverflowException"></exception>
         public static decimal AsDecimal(this string text, bool ignoreException = false)
         {
-            try
+            if (ignoreException)
             {
-                if (ignoreException)
-                {
-                    decimal value;
-                    decimal.TryParse(text, out value);
-                    return value;
-                }
-                return decimal.Parse(text);
+                decimal value;
+                decimal.TryParse(text, out value);
+                return value;
             }
-            catch (ArgumentNullException ex) { throw new OphiteException(ExceptionType.ArgumentNullException, ex); }
-            catch (FormatException ex) { throw new OphiteException(ExceptionType.FormatException, ex); }
-            catch (OverflowException ex) { throw new OphiteException(ExceptionType.OverflowException, ex); }
+            return decimal.Parse(text, CultureInfo.InvariantCulture);
         }
 
         /// <summary>
@@ -316,45 +257,52 @@ namespace Ophite.Extension
         /// <param name="hex">HEX hodnota v podobě stringu.</param>
         /// <returns>Vrací číslo long.</returns>
         /// <remarks>HEX string musí být maximálně 16 znaků dlouhý (převod do long).</remarks>
-        /// <exception cref="OphiteException"></exception>
         /// <exception cref="ArgumentNullException"></exception>
         /// <exception cref="ArgumentException"></exception>
         /// <exception cref="FormatException"></exception>
         /// <exception cref="OverflowException"></exception>
         public static long AsHexValue(this string hex)
         {
-            try
-            {
-                return long.Parse(hex, NumberStyles.HexNumber);
-            }
-            catch (ArgumentNullException ex) { throw new OphiteException(ExceptionType.ArgumentNullException, ex); }
-            catch (ArgumentException ex) { throw new OphiteException(ExceptionType.ArgumentException, ex); }
-            catch (FormatException ex) { throw new OphiteException(ExceptionType.FormatException, ex); }
-            catch (OverflowException ex) { throw new OphiteException(ExceptionType.OverflowException, ex); }
+            return long.Parse(hex, NumberStyles.HexNumber);
         }
 
         /// <summary>
-        /// Čte řetězec tak dlouho, dokud nenarazí na vstupní znak nebo do určité délky.
+        /// Čte řetězec tak dlouho, dokud nenarazí na vstupní znak.
         /// </summary>
         /// <param name="text">Vstupní řetězec.</param>
-        /// <param name="endIndex">Do jakého indexu se má řetězec číst (-1 ignoruje délku).</param>
         /// <param name="chr">Znak, který určuje konec čtení.</param>
+        /// <param name="withReadChr">Má se přečíst i vstupní znak?</param>
         /// <returns>Vrací přečtený řetězec.</returns>
         /// <remarks>Pokud vstupní text bude prázdný nebo se znak nebude vyskytovat v textu, tak vrácí NULL.</remarks>
-        /// <exception cref="OphiteException"></exception>
-        /// <exception cref="ArgumentOutOfRangeException"></exception>
-        public static string ReadTo(this string text, int endIndex, char chr)
+        public static string ReadTo(this string text, char chr, bool withReadChr = false)
         {
-            int index = text.IndexOf(chr);
-
-            if (index == -1 || (index > endIndex && endIndex != -1))
+            if (text.IsEmpty())
                 return null;
 
-            try
-            {
-                return text.Substring(0, index);
-            }
-            catch (ArgumentOutOfRangeException ex) { throw new OphiteException(ExceptionType.ArgumentOutOfRangeException, ex); }
+            int index = text.IndexOf(chr);
+
+            if (index == -1)
+                return null;
+
+            return text.Substring(0, index + (withReadChr ? 1 : 0));
+        }
+
+        /// <summary>
+        /// Čte řetězec do určité délky.
+        /// </summary>
+        /// <param name="text">Vstupní řetězec.</param>
+        /// <param name="count">Kolik znaků se má přečíst.</param>
+        /// <returns>Vrací přečtený řetězec.</returns>
+        /// <remarks>Pokud vstupní text bude prázdný nebo počet nebude platný, tak vrácí NULL.</remarks>
+        public static string ReadTo(this string text, int count)
+        {
+            if (text.IsEmpty())
+                return null;
+
+            if (count < 0 || count > text.Length)
+                return null;
+
+            return text.Substring(0, count);
         }
 
         /// <summary>

@@ -10,24 +10,24 @@ namespace OphiteTests.Extension
         public void AsBytes()
         {
             // kladná hodnota (bigEndian)
-            byte[] result = ((decimal)100.0).AsBytes();
-
-            CollectionAssert.AreEqual(new byte[] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 100 }, result);
+            CollectionAssert.AreEqual(
+                new byte[] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 100 },
+                ((decimal)100.0).AsBytes());
 
             // záporná hodnota (bigEndian)
-            result = ((decimal)-100.0).AsBytes();
-
-            CollectionAssert.AreEqual(new byte[] { 128, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 100 }, result);
+            CollectionAssert.AreEqual(
+                new byte[] { 128, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 100 },
+                ((decimal)-100.0).AsBytes());
 
             // kladná hodnota (littleEndian)
-            result = ((decimal)100.0).AsBytes(false);
-
-            CollectionAssert.AreEqual(new byte[] { 100, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, result);
+            CollectionAssert.AreEqual(
+                new byte[] { 100, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+                ((decimal)100.0).AsBytes(false));
 
             // záporná hodnota (littleEndian)
-            result = ((decimal)-100.0).AsBytes(false);
-
-            CollectionAssert.AreEqual(new byte[] { 100, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 128 }, result);
+            CollectionAssert.AreEqual(
+                new byte[] { 100, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 128 },
+                ((decimal)-100.0).AsBytes(false));
         }
     }
 }

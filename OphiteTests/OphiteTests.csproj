@@ -55,6 +55,7 @@
   </Choose>
   <ItemGroup>
     <Compile Include="Base\LogicTests.cs" />
+    <Compile Include="Extension\OString.cs" />
     <Compile Include="Extension\ODecimal.cs" />
     <Compile Include="Extension\ODouble.cs" />
     <Compile Include="Extension\OFloat.cs" />

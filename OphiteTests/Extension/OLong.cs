@@ -11,24 +11,24 @@ namespace OphiteTests.Extension
         public void AsBytes()
         {
             // kladná hodnota (bigEndian)
-            byte[] result = ((long)100).AsBytes();
-
-            CollectionAssert.AreEqual(new byte[] { 0, 0, 0, 0, 0, 0, 0, 100 }, result);
+            CollectionAssert.AreEqual(
+                new byte[] { 0, 0, 0, 0, 0, 0, 0, 100 },
+                ((long)100).AsBytes());
 
             // záporná hodnota (bigEndian)
-            result = ((long)-100).AsBytes();
-
-            CollectionAssert.AreEqual(new byte[] { 255, 255, 255, 255, 255, 255, 255, 156 }, result);
+            CollectionAssert.AreEqual(
+                new byte[] { 255, 255, 255, 255, 255, 255, 255, 156 },
+                ((long)-100).AsBytes());
 
             // kladná hodnota (littleEndian)
-            result = ((long)100).AsBytes(false);
-
-            CollectionAssert.AreEqual(new byte[] { 100, 0, 0, 0, 0, 0, 0, 0 }, result);
+            CollectionAssert.AreEqual(
+                new byte[] { 100, 0, 0, 0, 0, 0, 0, 0 },
+                ((long)100).AsBytes(false));
 
             // záporná hodnota (littleEndian)
-            result = ((long)-100).AsBytes(false);
-
-            CollectionAssert.AreEqual(new byte[] { 156, 255, 255, 255, 255, 255, 255, 255 }, result);
+            CollectionAssert.AreEqual(
+                new byte[] { 156, 255, 255, 255, 255, 255, 255, 255 },
+                ((long)-100).AsBytes(false));
         }
 
         [TestMethod]
@@ -49,9 +49,9 @@ namespace OphiteTests.Extension
         [TestMethod]
         public void FromUnixTime()
         {
-            DateTime result = new DateTime(2012, 11, 19, 18, 23, 22);
-
-            Assert.AreEqual(result, ((long)1353349402).AsDateTime());
+            Assert.AreEqual(
+                new DateTime(2012, 11, 19, 18, 23, 22),
+                ((long)1353349402).AsDateTime());
         }
     }
 }
