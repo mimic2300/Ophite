@@ -55,6 +55,15 @@
   </Choose>
   <ItemGroup>
     <Compile Include="Base\LogicTests.cs" />
+    <Compile Include="Extension\ODecimal.cs" />
+    <Compile Include="Extension\ODouble.cs" />
+    <Compile Include="Extension\OFloat.cs" />
+    <Compile Include="Extension\OULong.cs" />
+    <Compile Include="Extension\OLong.cs" />
+    <Compile Include="Extension\OUShort.cs" />
+    <Compile Include="Extension\OShort.cs" />
+    <Compile Include="Extension\OInt.cs" />
+    <Compile Include="Extension\OUInt.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
