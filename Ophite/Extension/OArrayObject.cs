@@ -1,10 +1,20 @@
 ﻿namespace Ophite.Extension
 {
     /// <summary>
-    /// Pracuje s polem.
+    /// Rozšiřuje původní datový typ "object[]".
     /// </summary>
-    public static class ArrayEx
+    public static class OArrayObject
     {
+        /// <summary>
+        /// Kontroluje, zda vstupní pole objektů je prázdné nebo NULL.
+        /// </summary>
+        /// <param name="objs">Vstupní pole objektů.</param>
+        /// <returns>Vrací TRUE, pokuď pole objektů je prázdné nebo NULL.</returns>
+        public static bool IsEmpty(this object[] objs)
+        {
+            return (objs == null || objs.Length < 1);
+        }
+
         /// <summary>
         /// Náhodně promíchá prvky v poli.
         /// </summary>
