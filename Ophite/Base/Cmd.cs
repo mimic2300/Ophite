@@ -1,7 +1,5 @@
-﻿using Ophite.Exceptions;
-using Ophite.Extension;
+﻿using Ophite.Extension;
 using System;
-using System.IO;
 
 namespace Ophite.Base
 {
@@ -15,8 +13,9 @@ namespace Ophite.Base
         /// </summary>
         /// <param name="question">Pod jakou otázkou, bude konzole požadovat double číslo.</param>
         /// <returns>Vrací double číslo.</returns>
-        /// <remarks>Pokud vstup z konzole bude špatný, tak vrácí vyjímku.</remarks>
-        /// <exception cref="OphiteException"></exception>
+        /// <exception cref="ArgumentNullException"></exception>
+        /// <exception cref="FormatException"></exception>
+        /// <exception cref="OverflowException"></exception>
         public static double ReadDouble(string question = null)
         {
             if (!question.IsEmpty())
@@ -30,21 +29,20 @@ namespace Ophite.Base
         /// </summary>
         /// <param name="question">Pod jakou otázkou, bude konzole požadovat double číslo.</param>
         /// <returns>Vrací číslo double.</returns>
-        /// <exception cref="OphiteException"></exception>
-        /// <exception cref="IOException"></exception>
         public static double ReadDoubleLoop(string question = null)
         {
             while (true)
             {
+                if (!question.IsEmpty())
+                    Console.Write(question);
+
                 try
                 {
-                    if (!question.IsEmpty())
-                        Console.Write(question);
-
-                    string text = Console.ReadLine();
-                    return text.AsDouble();
+                    return Console.ReadLine().AsDouble();
                 }
-                catch (IOException ex) { throw new OphiteException(ExceptionType.IOException, ex); }
+                catch (ArgumentException) { }
+                catch (FormatException) { }
+                catch (OverflowException) { }
             }
         }
 
@@ -53,8 +51,9 @@ namespace Ophite.Base
         /// </summary>
         /// <param name="question">Pod jakou otázkou, bude konzole požadovat int číslo.</param>
         /// <returns>Vrací int číslo.</returns>
-        /// <remarks>Když vstup z konzole bude špatný, tak vrácí vyjímku.</remarks>
-        /// <exception cref="OphiteException"></exception>
+        /// <exception cref="ArgumentNullException"></exception>
+        /// <exception cref="FormatException"></exception>
+        /// <exception cref="OverflowException"></exception>
         public static int ReadInt(string question = null)
         {
             if (!question.IsEmpty())
@@ -68,21 +67,20 @@ namespace Ophite.Base
         /// </summary>
         /// <param name="question">Pod jakou otázkou, bude konzole požadovat int číslo.</param>
         /// <returns>Vrací číslo int.</returns>
-        /// <exception cref="OphiteException"></exception>
-        /// <exception cref="IOException"></exception>
         public static int ReadIntLoop(string question = null)
         {
             while (true)
             {
+                if (!question.IsEmpty())
+                    Console.Write(question);
+
                 try
                 {
-                    if (!question.IsEmpty())
-                        Console.Write(question);
-
-                    string text = Console.ReadLine();
-                    return text.AsInt();
+                    return Console.ReadLine().AsInt();
                 }
-                catch (IOException ex) { throw new OphiteException(ExceptionType.IOException, ex); }
+                catch (ArgumentException) { }
+                catch (FormatException) { }
+                catch (OverflowException) { }
             }
         }
 

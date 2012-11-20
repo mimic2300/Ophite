@@ -307,10 +307,11 @@ namespace Ophite.Base
         /// <param name="a">První číslo.</param>
         /// <param name="b">Druhé číslo.</param>
         /// <returns>Vrací nejmenší společný násobek.</returns>
+        /// <exception cref="ArgumentException"></exception>
         public static int Lcm(int a, int b)
         {
-            if (a == 0 || b == 0)
-                return 0;
+            if (a < 1 || b < 1)
+                throw new ArgumentException("Žádný parametr nesmí být menší než 1.");
 
             return (a * b) / Gcd(a, b);
         }

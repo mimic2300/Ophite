@@ -15,8 +15,7 @@ namespace Ophite.Base
         /// <summary>
         /// Vynuceně ukončí tento process.
         /// </summary>
-        /// <exception cref="InvalidOperationException"></exception>
-        /// <exception cref="PlatformNotSupportedException"></exception>
+        /// <returns>Vrací TRUE, pokud se aktuální proces ukončil.</returns>
         public static bool ForceTerminate()
         {
             return ProcessKill(Process.GetCurrentProcess().Id);
@@ -119,7 +118,7 @@ namespace Ophite.Base
         /// Získá aktuální čas v sekundách.
         /// </summary>
         /// <returns>Vrací sekundy.</returns>
-        public static long ActualTime()
+        public static long ActualTimeInSeconds()
         {
             return (long)new TimeSpan(DateTime.Now.Ticks).TotalSeconds;
         }
@@ -130,7 +129,6 @@ namespace Ophite.Base
         /// <returns>Vrací unixtime.</returns>
         public static long UnixTime()
         {
-            // zde vyjímka "ArgumentOutOfRangeException" nenastane
             return (long)(DateTime.UtcNow - new DateTime(1970, 1, 1)).TotalSeconds;
         }
     }
