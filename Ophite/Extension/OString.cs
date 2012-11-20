@@ -1,9 +1,10 @@
-﻿using Ophite.Exceptions;
-using System;
+﻿using System;
+using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Runtime.Serialization.Formatters.Soap;
 using System.Text;
+using System.Xml;
 
 namespace Ophite.Extension
 {
@@ -313,15 +314,15 @@ namespace Ophite.Extension
         /// <param name="options">Nastavení rozdělení.</param>
         /// <returns>Vrací pole stringů.</returns>
         /// <remarks>Pokud vstupní text bude NULL nebo rozdělovací text bude NULL, tak vrácí prázdné pole.</remarks>
-        /// <exception cref="OphiteException"></exception>
-        /// <exception cref="ArgumentException"></exception>
         public static string[] SplitEx(this string text, string splitString, StringSplitOptions options = StringSplitOptions.RemoveEmptyEntries)
         {
-            try
-            {
-                return (!text.IsEmpty() && !splitString.IsEmpty()) ? text.Split(new string[] { splitString }, options) : new string[] { };
-            }
-            catch (ArgumentException ex) { throw new OphiteException(ExceptionType.ArgumentException, ex); }
+            if (text.IsEmpty())
+                return new string[] { };
+
+            if (splitString.IsEmpty())
+                return new string[] { text };
+
+            return text.Split(new string[] { splitString }, options);
         }
 
         /// <summary>
@@ -331,36 +332,58 @@ namespace Ophite.Extension
         /// <param name="start">Odebere text, který bude před každou HEX hodnotou (např. 0x).</param>
         /// <param name="end">Odebere text, který bude za každou HEX hodnotou (např. mezera).</param>
         /// <returns>Vrací pole byte.</returns>
-        /// <remarks>Pokud nastane chyba, tak vrací prázdné pole.</remarks>
-        /// <exception cref="OphiteException"></exception>
+        /// <remarks>Pokud hexString bude prázdný nebo NULL, tak vrací prázdné pole.</remarks>
         /// <exception cref="FormatException"></exception>
         /// <exception cref="ArgumentException"></exception>
         /// <exception cref="OverflowException"></exception>
-        public static byte[] AsBytesHexa(this string hexString, string start = "", string end = "")
+        public static byte[] AsBytesFromHex(this string hexString, string start = "", string end = "")
         {
-            if (!hexString.IsMatch(RegexMatch.HexValue) || hexString.Length < 2 || hexString.Length % 2 != 0)
+            if (hexString.IsEmpty() || hexString.Length < 1)
                 return new byte[] { };
 
-            if (!start.IsEmpty())
-                hexString = hexString.Replace(start, "");
+            string[] tokens = null;
 
-            if (!end.IsEmpty())
-                hexString = hexString.Replace(end, "");
+            if (!start.IsEmpty() && hexString.Contains(start))
+                tokens = hexString.SplitEx(start);
 
-            byte[] data = new byte[hexString.Length / 2];
+            List<byte> buffer = new List<byte>();
 
-            try
+            if (!tokens.IsEmpty())
             {
-                for (int i = 0, n = 0; i < hexString.Length; i += 2, n++)
+                foreach (string part in tokens)
                 {
-                    data[n] = Convert.ToByte(hexString.Substring(i, 2), 16);
+                    string tmp = part;
+
+                    if (!end.IsEmpty() && part.Contains(end))
+                        tmp = part.SplitEx(end)[0];
+
+                    buffer.Add(Convert.ToByte(tmp, 16));
                 }
             }
-            catch (FormatException ex) { throw new OphiteException(ExceptionType.FormatException, ex); }
-            catch (ArgumentException ex) { throw new OphiteException(ExceptionType.ArgumentException, ex); }
-            catch (OverflowException ex) { throw new OphiteException(ExceptionType.OverflowException, ex); }
+            else
+            {
+                if (!end.IsEmpty() && hexString.Contains(end))
+                    tokens = hexString.SplitEx(end);
 
-            return data;
+                if (!tokens.IsEmpty())
+                {
+                    foreach (string part in tokens)
+                    {
+                        buffer.Add(Convert.ToByte(part, 16));
+                    }
+                }
+                else
+                {
+                    if (hexString.Length % 2 != 0)
+                        hexString = "0" + hexString;
+
+                    for (int i = 0, n = 0; i < hexString.Length; i += 2, n++)
+                    {
+                        buffer.Add(Convert.ToByte(hexString.Substring(i, 2), 16));
+                    }
+                }
+            }
+            return buffer.ToArray();
         }
 
         /// <summary>
@@ -368,19 +391,17 @@ namespace Ophite.Extension
         /// </summary>
         /// <param name="soapString">Vstupní SOAP string.</param>
         /// <returns>Vrací původní objekt.</returns>
-        /// <exception cref="OphiteException"></exception>
-        /// <exception cref="ArgumentNullException"></exception>
+        /// <remarks>Pokud soapString bude NULL, tak vrací NULL.</remarks>
+        /// <exception cref="XmlException"></exception>
         public static object AsObjectFromSoap(this string soapString)
         {
-            try
+            if (soapString == null)
+                return null;
+
+            using (MemoryStream ms = new MemoryStream(soapString.AsBytesUTF8()))
             {
-                using (MemoryStream ms = new MemoryStream(soapString.AsBytesUTF8()))
-                {
-                    SoapFormatter sf = new SoapFormatter();
-                    return sf.Deserialize(ms);
-                }
+                return new SoapFormatter().Deserialize(ms);
             }
-            catch (ArgumentNullException ex) { throw new OphiteException(ExceptionType.ArgumentNullException, ex); }
         }
 
         /// <summary>
@@ -401,20 +422,13 @@ namespace Ophite.Extension
         /// <param name="data">Vstupní text v base64.</param>
         /// <returns>Vrací pole byte.</returns>
         /// <remarks>Pokud vstupní text bude NULL, tak vrací prázdní pole byte.</remarks>
-        /// <exception cref="OphiteException"></exception>
-        /// <exception cref="ArgumentNullException"></exception>
         /// <exception cref="FormatException"></exception>
         public static byte[] FromBase64(this string data)
         {
             if (data.IsEmpty())
                 return new byte[] { };
 
-            try
-            {
-                return Convert.FromBase64String(data);
-            }
-            catch (ArgumentNullException ex) { throw new OphiteException(ExceptionType.ArgumentNullException, ex); }
-            catch (FormatException ex) { throw new OphiteException(ExceptionType.FormatException, ex); }
+            return Convert.FromBase64String(data);
         }
     }
 }

@@ -53,6 +53,7 @@
     <Compile Include="Extension\ODecimal.cs" />
     <Compile Include="Extension\ODouble.cs" />
     <Compile Include="Extension\OFloat.cs" />
+    <Compile Include="Extension\OObject.cs" />
     <Compile Include="Extension\OUInt.cs" />
     <Compile Include="Extension\Enum\RegexModify.cs" />
     <Compile Include="Extension\Enum\RegexParse.cs" />

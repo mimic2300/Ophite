@@ -42,6 +42,7 @@ namespace Ophite.Extension
         /// </summary>
         /// <param name="unixTime">Unixový čas.</param>
         /// <returns>Vrací novou instanci datumu.</returns>
+        /// <exception cref="ArgumentOutOfRangeException"></exception>
         public static DateTime AsDateTime(this long unixTime)
         {
             return (new DateTime(1970, 1, 1, 0, 0, 0)).AddSeconds(unixTime);

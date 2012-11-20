@@ -1,12 +1,19 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Ophite.Extension;
 using System;
+using System.Xml;
 
 namespace OphiteTests.Extension
 {
     [TestClass]
     public class OString
     {
+        [Serializable]
+        private struct Person
+        {
+            public byte Age;
+        }
+
         [TestMethod]
         public void IsEmpty()
         {
@@ -53,6 +60,7 @@ namespace OphiteTests.Extension
             try
             {
                 CollectionAssert.AreEqual(new byte[] { }, ((string)null).AsBytesASCII());
+                CollectionAssert.AreEqual(null, ((string)null).AsBytesASCII());
                 Assert.Fail();
             }
             catch (ArgumentNullException) { }
@@ -71,6 +79,7 @@ namespace OphiteTests.Extension
             try
             {
                 Assert.AreEqual((short)0, "1.00".AsShort());
+                Assert.AreEqual((short)1, "1.00".AsShort());
                 Assert.Fail();
             }
             catch (FormatException) { }
@@ -95,6 +104,7 @@ namespace OphiteTests.Extension
             try
             {
                 Assert.AreEqual((short)0, "10000000".AsShort());
+                Assert.AreEqual((short)short.MaxValue, "10000000".AsShort());
                 Assert.Fail();
             }
             catch (OverflowException) { }
@@ -122,6 +132,7 @@ namespace OphiteTests.Extension
             try
             {
                 Assert.AreEqual((ushort)0, "1.00".AsUShort());
+                Assert.AreEqual((ushort)1, "1.00".AsUShort());
                 Assert.Fail();
             }
             catch (FormatException) { }
@@ -146,6 +157,7 @@ namespace OphiteTests.Extension
             try
             {
                 Assert.AreEqual((ushort)0, "10000000".AsUShort());
+                Assert.AreEqual((ushort)ushort.MaxValue, "10000000".AsUShort());
                 Assert.Fail();
             }
             catch (OverflowException) { }
@@ -176,6 +188,7 @@ namespace OphiteTests.Extension
             try
             {
                 Assert.AreEqual((int)0, "1.00".AsInt());
+                Assert.AreEqual((int)1, "1.00".AsInt());
                 Assert.Fail();
             }
             catch (FormatException) { }
@@ -200,6 +213,7 @@ namespace OphiteTests.Extension
             try
             {
                 Assert.AreEqual((int)0, "10000000000".AsInt());
+                Assert.AreEqual((int)int.MaxValue, "10000000000".AsInt());
                 Assert.Fail();
             }
             catch (OverflowException) { }
@@ -227,6 +241,7 @@ namespace OphiteTests.Extension
             try
             {
                 Assert.AreEqual((uint)0, "1.00".AsUInt());
+                Assert.AreEqual((uint)1, "1.00".AsUInt());
                 Assert.Fail();
             }
             catch (FormatException) { }
@@ -251,6 +266,7 @@ namespace OphiteTests.Extension
             try
             {
                 Assert.AreEqual((uint)0, "10000000000".AsUInt());
+                Assert.AreEqual((uint)uint.MaxValue, "10000000000".AsUInt());
                 Assert.Fail();
             }
             catch (OverflowException) { }
@@ -281,6 +297,7 @@ namespace OphiteTests.Extension
             try
             {
                 Assert.AreEqual((long)0, "1.00".AsLong());
+                Assert.AreEqual((long)1, "1.00".AsLong());
                 Assert.Fail();
             }
             catch (FormatException) { }
@@ -305,6 +322,7 @@ namespace OphiteTests.Extension
             try
             {
                 Assert.AreEqual((long)0, "10000000000000000000".AsLong());
+                Assert.AreEqual((long)long.MaxValue, "10000000000000000000".AsLong());
                 Assert.Fail();
             }
             catch (OverflowException) { }
@@ -332,6 +350,7 @@ namespace OphiteTests.Extension
             try
             {
                 Assert.AreEqual((ulong)0, "1.00".AsULong());
+                Assert.AreEqual((ulong)1, "1.00".AsULong());
                 Assert.Fail();
             }
             catch (FormatException) { }
@@ -356,6 +375,7 @@ namespace OphiteTests.Extension
             try
             {
                 Assert.AreEqual((ulong)0, "100000000000000000000".AsULong());
+                Assert.AreEqual((ulong)ulong.MaxValue, "100000000000000000000".AsULong());
                 Assert.Fail();
             }
             catch (OverflowException) { }
@@ -405,6 +425,7 @@ namespace OphiteTests.Extension
             try
             {
                 Assert.AreEqual((float)0.0f, (float.MaxValue + 1).ToString().AsFloat());
+                Assert.AreEqual((float)float.MaxValue, (float.MaxValue + 1).ToString().AsFloat());
                 Assert.Fail();
             }
             catch (OverflowException) { }
@@ -454,6 +475,7 @@ namespace OphiteTests.Extension
             try
             {
                 Assert.AreEqual((double)0.0, (double.MaxValue + 1).ToString().AsDouble());
+                Assert.AreEqual((double)double.MaxValue, (double.MaxValue + 1).ToString().AsDouble());
                 Assert.Fail();
             }
             catch (OverflowException) { }
@@ -503,6 +525,7 @@ namespace OphiteTests.Extension
             try
             {
                 Assert.AreEqual((decimal)0.0, "79228162514264337593543950336".AsDecimal());
+                Assert.AreEqual((decimal)decimal.MaxValue, "79228162514264337593543950336".AsDecimal());
                 Assert.Fail();
             }
             catch (OverflowException) { }
@@ -533,6 +556,8 @@ namespace OphiteTests.Extension
             try
             {
                 Assert.AreEqual((long)0, "ABCDEFG".AsHexValue());
+                Assert.AreEqual((long)11259375, "ABCDEFG".AsHexValue());
+                Assert.Fail();
             }
             catch (FormatException) { }
 
@@ -540,6 +565,7 @@ namespace OphiteTests.Extension
             try
             {
                 Assert.AreEqual((long)0, "".AsHexValue());
+                Assert.Fail();
             }
             catch (FormatException) { }
 
@@ -547,6 +573,7 @@ namespace OphiteTests.Extension
             try
             {
                 Assert.AreEqual((long)0, ((string)null).AsHexValue());
+                Assert.Fail();
             }
             catch (ArgumentNullException) { }
         }
@@ -583,6 +610,151 @@ namespace OphiteTests.Extension
             Assert.AreEqual(
                 null,
                 "Text je cokoliv, co je uloženo v textovém formátu.".ReadTo(-100));
+        }
+
+        [TestMethod]
+        public void SplitEx()
+        {
+            // rozdělení podle  " : "
+            CollectionAssert.AreEqual(
+                new string[] { "a", "b", "c" },
+                "a : b : c".SplitEx(" : "));
+
+            // rozdělení posle znaku, který v textu neexistuje
+            CollectionAssert.AreEqual(
+                new string[] { "a : b : c" },
+                "a : b : c".SplitEx("x"));
+
+            // hodnota NULL
+            CollectionAssert.AreEqual(
+                new string[] { },
+                ((string)null).SplitEx("x"));
+
+            // rozdělovací text nebude existovat
+            CollectionAssert.AreEqual(
+                new string[] { "a : b : c" },
+                "a : b : c".SplitEx(""));
+
+            // rozdělovací text bude NULL
+            CollectionAssert.AreEqual(
+                new string[] { "a : b : c" },
+                "a : b : c".SplitEx(null));
+        }
+
+        [TestMethod]
+        public void AsBytesFromHex()
+        {
+            // text v HEX
+            CollectionAssert.AreEqual(new byte[] { 255, 80, 170 }, "FF50AA".AsBytesFromHex());
+
+            // pokud bude lichý počet, tak na začátek přidá 0 (FF50A -> 0FF50A)
+            CollectionAssert.AreEqual(new byte[] { 15, 245, 10 }, "FF50A".AsBytesFromHex());
+
+            // pokud bude lichý počet a velikost bude vetší jak 0, tak opět přidá 0 (F -> 0F)
+            CollectionAssert.AreEqual(new byte[] { 15 }, "F".AsBytesFromHex());
+
+            // prázdný text
+            CollectionAssert.AreEqual(new byte[] { }, "".AsBytesFromHex());
+
+            // hodnota NULL
+            CollectionAssert.AreEqual(new byte[] { }, ((string)null).AsBytesFromHex());
+
+            // neplatný vstup pro HEX hodnotu
+            try
+            {
+                CollectionAssert.AreEqual(new byte[] { 15 }, "FG".AsBytesFromHex());
+                CollectionAssert.AreEqual(new byte[] { }, "FG".AsBytesFromHex());
+                Assert.Fail();
+            }
+            catch (FormatException) { }
+
+            // za každou HEX hodnotou je mezera
+            CollectionAssert.AreEqual(new byte[] { 255, 80, 170 }, "FF 50 AA".AsBytesFromHex("", " "));
+
+            // před každou HEX hodnotou je mezera
+            CollectionAssert.AreEqual(new byte[] { 255, 80, 170 }, " FF 50 AA".AsBytesFromHex(" "));
+
+            // před i za každou HEX hodnotou je nějaký znak
+            CollectionAssert.AreEqual(new byte[] { 255, 80, 170 }, "0xFF 0x50 0xAA".AsBytesFromHex("0x", " "));
+
+            // před i za každou HEX hodnotou je nějaký znak a zároveň HEX hodnota je zjednodušená
+            CollectionAssert.AreEqual(new byte[] { 15, 80, 10 }, "0xF 0x50 0xA".AsBytesFromHex("0x", " "));
+
+            // špatný formát (mezi HEX hodnotami je ještě mezera)
+            try
+            {
+                CollectionAssert.AreEqual(new byte[] { 15, 80, 10 }, "0xF 0x50 0xA".AsBytesFromHex("0x"));
+                CollectionAssert.AreEqual(new byte[] { }, "0xF 0x50 0xA".AsBytesFromHex("0x"));
+                Assert.Fail();
+            }
+            catch (FormatException) { }
+
+            // v pořádku, protože HEX hodnota může začínat "0x", ale nesmí obsahovat mezeru
+            CollectionAssert.AreEqual(new byte[] { 15, 80, 10 }, "0xF 0x50 0xA".AsBytesFromHex("", " "));
+
+            // špatný formát (před HEX hodnotami je ještě "x")
+            try
+            {
+                CollectionAssert.AreEqual(new byte[] { 15, 80, 10 }, "xF x50 xA".AsBytesFromHex("", " "));
+                CollectionAssert.AreEqual(new byte[] { }, "xF x50 xA".AsBytesFromHex("", " "));
+                Assert.Fail();
+            }
+            catch (FormatException) { }
+        }
+
+        [TestMethod]
+        public void AsObjectFromSoap()
+        {
+            Person person = new Person() { Age = 30 };
+            string soap = person.AsSoapStringASCII();
+
+            // soap string Person na objekt Person
+            Assert.AreEqual(person, soap.AsObjectFromSoap());
+
+            // špatný formát soap stringu
+            try
+            {
+                Assert.AreEqual(" ", " ".AsObjectFromSoap());
+                Assert.Fail();
+            }
+            catch (XmlException) { }
+
+            // hodnota NULL
+            Assert.AreEqual(null, ((string)null).AsObjectFromSoap());
+        }
+
+        [TestMethod]
+        public void RemoveLeadingZeros()
+        {
+            // odebere první nuly
+            Assert.AreEqual("123", "000123".RemoveLeadingZeros());
+
+            // prázdný text
+            Assert.AreEqual("", "".RemoveLeadingZeros());
+
+            // hodnota NULL
+            Assert.AreEqual(null, ((string)null).RemoveLeadingZeros());
+        }
+
+        [TestMethod]
+        public void FromBase64()
+        {
+            // převod platného base64
+            CollectionAssert.AreEqual(new byte[] { 111, 112, 104, 105, 116, 101 }, "b3BoaXRl".FromBase64());
+
+            // prázdný string
+            CollectionAssert.AreEqual(new byte[] { }, "".FromBase64());
+
+            // hodnota NULL
+            CollectionAssert.AreEqual(new byte[] { }, ((string)null).FromBase64());
+
+            // neplatný string nebo znak ve stringu
+            try
+            {
+                CollectionAssert.AreEqual(new byte[] { 111, 112, 104, 105, 116, 101 }, "b3BoaXRl!".FromBase64());
+                CollectionAssert.AreEqual(new byte[] { }, "b3BoaXRl!".FromBase64());
+            }
+            catch (FormatException) { }
         }
     }
 }

@@ -49,9 +49,20 @@ namespace OphiteTests.Extension
         [TestMethod]
         public void FromUnixTime()
         {
+            // převod do datumu
             Assert.AreEqual(
                 new DateTime(2012, 11, 19, 18, 23, 22),
                 ((long)1353349402).AsDateTime());
+
+            // unixový čas je příliš velký
+            try
+            {
+                Assert.AreEqual(
+                    new DateTime(2012, 11, 19, 18, 23, 22),
+                    ((long)13533494020000).AsDateTime());
+                Assert.Fail();
+            }
+            catch (ArgumentOutOfRangeException) { }
         }
     }
 }

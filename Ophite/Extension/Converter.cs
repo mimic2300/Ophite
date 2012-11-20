@@ -2,11 +2,9 @@
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.Drawing.Text;
-using System.Globalization;
 using System.IO;
 using System.Runtime.InteropServices;
 using System.Runtime.Serialization.Formatters.Binary;
-using System.Runtime.Serialization.Formatters.Soap;
 using System.Text;
 
 namespace Ophite.Extension
@@ -432,28 +430,50 @@ namespace Ophite.Extension
         /// </summary>
         /// <param name="data">Vstupní pole byte.</param>
         /// <param name="before">Text, který bude před každou HEX hodnotou.</param>
-        /// <param name="back">Text, který bude za každou HEX hodnotou.</param>
+        /// <param name="after">Text, který bude za každou HEX hodnotou.</param>
         /// <param name="toLower">Má obsahovat výstup malé znaky?</param>
         /// <returns>Vrací HEX string.</returns>
         /// <remarks>Pokud nastane chyba při převodu, tak vrácí NULL.</remarks>
-        public static string AsStringHex(this byte[] data, string before = "", string back = "", bool toLower = true)
+        public static string AsStringHex(this byte[] data, string before = "", string after = "", bool toLower = true)
         {
             try
             {
                 string hexa = BitConverter.ToString(data).Replace("-", "");
                 string output = null;
 
-                if (before.IsEmpty() && back.IsEmpty())
+                if (before.IsEmpty() && after.IsEmpty())
                     return (toLower) ? hexa.ToLowerInvariant() : hexa;
 
                 for (int i = 2; i < hexa.Length; i += 2)
                 {
                     output += before + ((toLower) ? hexa[i - 2].ToString().ToLowerInvariant() : hexa[i - 2].ToString());
-                    output += ((toLower) ? hexa[i - 1].ToString().ToLowerInvariant() : hexa[i - 1].ToString()) + back;
+                    output += ((toLower) ? hexa[i - 1].ToString().ToLowerInvariant() : hexa[i - 1].ToString()) + after;
                 }
                 return output;
             }
             catch (Exception) { return null; }
+        }
+
+        /// <summary>
+        /// Převádí pole byte do DEC formátu jako string.
+        /// </summary>
+        /// <param name="data">Vstupní pole byte.</param>
+        /// <param name="before">Text, který bude před každou DEC hodnotou.</param>
+        /// <param name="after">Text, který bude za každou DEC hodnotou.</param>
+        /// <returns>Vrací DEC string.</returns>
+        /// <remarks>Pokud vstupní data jsou NULL nebo prázdné, tak vrací NULL.</remarks>
+        public static string AsStringDec(this byte[] data, string before = "", string after = "")
+        {
+            if (data.IsEmpty())
+                return string.Empty;
+
+            StringBuilder sb = new StringBuilder();
+
+            for (int i = 0; i < data.Length; i++)
+            {
+                sb.Append(before).Append(data[i]).Append(after);
+            }
+            return sb.ToString();
         }
 
         /// <summary>
@@ -635,80 +655,6 @@ namespace Ophite.Extension
         }
 
         #endregion Image / Bitmap.
-
-        #region object
-
-        /// <summary>
-        /// Převádí objekt na serializované pole byte.
-        /// </summary>
-        /// <param name="obj">Vstupní objekt.</param>
-        /// <returns>Vrací serializované pole byte.</returns>
-        /// <remarks>Pokud vstupní objekt bude třída nebo struktůra, tak musí obsahovat flag [Serializable], jinak vrací NULL!</remarks>
-        public static byte[] AsObjectSerialize(this object obj)
-        {
-            try
-            {
-                byte[] data = null;
-
-                using (MemoryStream ms = new MemoryStream())
-                {
-                    new BinaryFormatter().Serialize(ms, obj);
-                    data = ms.ToArray();
-                }
-                return data;
-            }
-            catch (Exception) { return null; }
-        }
-
-        /// <summary>
-        /// Převádí objekt na SOAP string v kódování ASCII.
-        /// </summary>
-        /// <param name="obj">Vstupní objekt.</param>
-        /// <returns>Vrací SOAP ASCII string.</returns>
-        /// <remarks>Pokud nastane chyba, tak vrací NULL.</remarks>
-        public static string AsSoapStringASCII(this object obj)
-        {
-            try
-            {
-                string result = null;
-
-                using (MemoryStream ms = new MemoryStream())
-                {
-                    SoapFormatter sf = new SoapFormatter();
-                    sf.Serialize(ms, obj);
-                    ms.Flush();
-                    result = Encoding.ASCII.GetString(ms.GetBuffer(), 0, (int)ms.Position);
-                }
-                return result;
-            }
-            catch { return null; }
-        }
-
-        /// <summary>
-        /// Převádí objekt na SOAP string v kódování UTF8.
-        /// </summary>
-        /// <param name="obj">Vstupní objekt.</param>
-        /// <returns>Vrací SOAP UTF8 string.</returns>
-        /// <remarks>Pokud nastane chyba, tak vrací NULL.</remarks>
-        public static string AsSoapStringUTF8(this object obj)
-        {
-            try
-            {
-                string result = null;
-
-                using (MemoryStream ms = new MemoryStream())
-                {
-                    SoapFormatter sf = new SoapFormatter();
-                    sf.Serialize(ms, obj);
-                    ms.Flush();
-                    result = UTF8Encoding.UTF8.GetString(ms.GetBuffer(), 0, (int)ms.Position);
-                }
-                return result;
-            }
-            catch { return null; }
-        }
-
-        #endregion object
 
         #region object[]
 
