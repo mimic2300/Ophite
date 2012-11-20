@@ -1,5 +1,4 @@
-﻿using Ophite.Exceptions;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
 
@@ -8,7 +7,7 @@ namespace Ophite.Extension
     /// <summary>
     /// Rozšiřuje typy o bezpečtnostní prvky.
     /// </summary>
-    public static class RegexEx
+    public static class ORegex
     {
         /// <summary>
         /// Kontroluje text přes regex výraz.
@@ -16,14 +15,15 @@ namespace Ophite.Extension
         /// <param name="text">Vstupní text.</param>
         /// <param name="template">Volba regexu.</param>
         /// <param name="options">Speciální nastavení regexu.</param>
-        /// <returns>Vrací true, pokud vstupní text projde kontrolou.</returns>
-        /// <exception cref="OphiteException"></exception>
-        /// <exception cref="ArgumentNullException"></exception>
+        /// <returns>Vrací TRUE, pokud vstupní text projde kontrolou.</returns>
+        /// <remarks>Pokud text bude NULL, tak vrací FALSE.</remarks>
         /// <exception cref="ArgumentOutOfRangeException"></exception>
-        /// <exception cref="ArgumentException"></exception>
         /// <exception cref="RegexMatchTimeoutException"></exception>
         public static bool IsMatch(this string text, RegexMatch template, RegexOptions options = RegexOptions.None)
         {
+            if (text == null)
+                return false;
+
             string pattern = null;
 
             switch (template)
@@ -113,15 +113,7 @@ namespace Ophite.Extension
                     pattern = @"^m*(d?c{0,3}|c[dm])" + "(l?x{0,3}|x[lc])(v?i{0,3}|i[vx])$";
                     break;
             }
-
-            try
-            {
-                return Regex.IsMatch(text, pattern, options);
-            }
-            catch (ArgumentNullException ex) { throw new OphiteException(ExceptionType.ArgumentNullException, ex); }
-            catch (ArgumentOutOfRangeException ex) { throw new OphiteException(ExceptionType.ArgumentOutOfRangeException, ex); }
-            catch (ArgumentException ex) { throw new OphiteException(ExceptionType.ArgumentException, ex); }
-            catch (RegexMatchTimeoutException ex) { throw new OphiteException(ExceptionType.RegexMatchTimeoutException, ex); }
+            return Regex.IsMatch(text, pattern, options);
         }
 
         /// <summary>
@@ -130,9 +122,7 @@ namespace Ophite.Extension
         /// <param name="text">Vstupní text.</param>
         /// <param name="template">Typ modifikace.</param>
         /// <returns>Vrací upravený text.</returns>
-        /// <exception cref="OphiteException"></exception>
-        /// <exception cref="ArgumentNullException"></exception>
-        /// <exception cref="ArgumentException"></exception>
+        /// <remarks>Pokud text bude NULL, tak vrací NULL.</remarks>
         /// <exception cref="RegexMatchTimeoutException"></exception>
         public static string Modify(this string text, RegexModify template)
         {
@@ -146,6 +136,9 @@ namespace Ophite.Extension
             // \047 single quote
             // \134 backslash
             // \140 grave accent
+
+            if (text == null)
+                return null;
 
             string pattern = null;
             string replacement = null;
@@ -200,14 +193,7 @@ namespace Ophite.Extension
                     replacement = " ";
                     break;
             }
-
-            try
-            {
-                return Regex.Replace(text, pattern, replacement);
-            }
-            catch (ArgumentNullException ex) { throw new OphiteException(ExceptionType.ArgumentNullException, ex); }
-            catch (ArgumentException ex) { throw new OphiteException(ExceptionType.ArgumentException, ex); }
-            catch (RegexMatchTimeoutException ex) { throw new OphiteException(ExceptionType.RegexMatchTimeoutException, ex); }
+            return Regex.Replace(text, pattern, replacement);
         }
 
         /// <summary>
@@ -217,28 +203,22 @@ namespace Ophite.Extension
         /// <param name="patern">Patern, podle kterého se má parsovat.</param>
         /// <param name="option">Nastavení parseru.</param>
         /// <returns>Vrací pole stringů s výsledky.</returns>
-        /// <exception cref="OphiteException"></exception>
-        /// <exception cref="ArgumentNullException"></exception>
+        /// <remarks>Pokud text bude NULL, tak vrací NULL.</remarks>
         /// <exception cref="ArgumentOutOfRangeException"></exception>
-        /// <exception cref="ArgumentException"></exception>
         public static string[] Parse(this string text, string patern, RegexOptions option = RegexOptions.Multiline)
         {
+            if (text == null)
+                return null;
+
             List<string> data = new List<string>();
             MatchCollection matches = null;
 
-            try
+            matches = Regex.Matches(text, patern, option);
+
+            foreach (Match s in matches)
             {
-                matches = Regex.Matches(text, patern, option);
-
-                foreach (Match s in matches)
-                {
-                    data.Add(s.ToString());
-                }
+                data.Add(s.ToString());
             }
-            catch (ArgumentNullException ex) { throw new OphiteException(ExceptionType.ArgumentNullException, ex); }
-            catch (ArgumentOutOfRangeException ex) { throw new OphiteException(ExceptionType.ArgumentOutOfRangeException, ex); }
-            catch (ArgumentException ex) { throw new OphiteException(ExceptionType.ArgumentException, ex); }
-
             return data.ToArray();
         }
         /// <summary>
@@ -247,12 +227,13 @@ namespace Ophite.Extension
         /// <param name="text">Vstupní text.</param>
         /// <param name="template">Jak se má parsovat.</param>
         /// <returns>Vrací pole stringů s výsledky.</returns>
-        /// <exception cref="OphiteException"></exception>
-        /// <exception cref="ArgumentNullException"></exception>
+        /// <remarks>Pokud text bude NULL, tak vrací NULL.</remarks>
         /// <exception cref="ArgumentOutOfRangeException"></exception>
-        /// <exception cref="ArgumentException"></exception>
         public static string[] Parse(this string text, RegexParse template)
         {
+            if (text == null)
+                return null;
+
             string pattern = null;
 
             switch (template)
@@ -287,8 +268,6 @@ namespace Ophite.Extension
                     pattern = @"(\d+\.?\d*|\.\d+)";
                     break;
             }
-
-            // vyhazuje OphiteException (3)
             return text.Parse(pattern, RegexOptions.Multiline);
         }
     }
