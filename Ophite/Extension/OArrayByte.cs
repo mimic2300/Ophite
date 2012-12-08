@@ -181,8 +181,8 @@ namespace Ophite.Extension
         public static decimal AsDecimal(this byte[] array)
         {
             if (array.Length == 1)
-                return decimal.Parse(((char)array[0]).ToString());
-
+                return Convert.ToDecimal(array[0]);
+            
             using (MemoryStream ms = new MemoryStream(array))
             {
                 using (BinaryReader reader = new BinaryReader(ms))
